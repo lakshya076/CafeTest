@@ -52,7 +52,6 @@ void CardWidget::onIncrement()
     if (m_quantity < m_availableQty) {
         m_quantity++;
         ui->qtyCard->setText(QString::number(m_quantity));
-        qDebug() << "Card #" << m_id << ": New quantity:" << m_quantity;
 
         updateButtonStates();
         emit quantityChanged(m_id, 1, m_price);
@@ -66,7 +65,6 @@ void CardWidget::onDecrement()
     if (m_quantity > 0) {
         m_quantity--;
         ui->qtyCard->setText(QString::number(m_quantity));
-        qDebug() << "Card #" << m_id << ": New quantity:" << m_quantity;
 
         updateButtonStates();
         updateVisibility(); // Check if we need to hide increment/decrement

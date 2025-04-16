@@ -15,15 +15,8 @@ class CardWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit CardWidget(int id,
-                        const QString &name,
-                        bool isVeg,
-                        const QString &indicator1,
-                        const QString &indicator2,
-                        const QString &indicator3,
-                        double price,
-                        int availableQty,
-                        QWidget *parent = nullptr);
+    explicit CardWidget(int id, const QString &name, bool isVeg, const QString &indicator1, const QString &indicator2,
+                        const QString &indicator3, double price, int availableQty, QWidget *parent = nullptr);
     ~CardWidget();
 
     int getId() const { return m_id; }
