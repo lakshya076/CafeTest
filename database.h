@@ -18,6 +18,7 @@ public:
     static void checkDrivers();
     static void readData();
 
+    // User table functions
     static bool insertUser(const QString &uid,
                            const QString &name,
                            const QString &phone,
@@ -41,8 +42,9 @@ public:
     static void setUserLoggedIn(const QString &uid);
     static bool checkLogged();
 
-    //Cafe Interface Functions
+    static QVariantMap getItem(const int &id);
 
+    //Cafe Interface Functions
     static void addItem(const QString &name,
                         const bool &is_vegetarian,
                         const QString &indicator1,

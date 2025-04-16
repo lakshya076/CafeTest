@@ -274,13 +274,29 @@ bool Database::checkLogged()
     return false;
 }
 
-void Database::checkDrivers()
-{
-    qDebug() << "Available drivers:" << QSqlDatabase::drivers();
+QVariantMap Database::getItem(const int &id) {
+    QSqlQuery query;
+    query.prepare("SELECT name, available_qty FROM items where id = :id");
+    query.bindValue(":id", id);
+
+    QVariantMap itemData;
+
+    if (query.exec()) {
+        if (query.next()) {
+            itemData["name"] = query.value("name").toString();
+            itemData["available_qty"] = query.value("available_qty").toInt();
+         } else {
+            qDebug() << "No item found with uid: " << id;
+        }
+    } else {
+        qDebug() << "Query execution failed: " << query.lastError().text();
+    }
+
+    return itemData;
 }
 
-// Cafe Interface Functions
 
+// Cafe Interface Functions
 void Database::addItem(const QString &name,
                        const bool &is_vegetarian,
                        const QString &indicator1,
@@ -455,4 +471,11 @@ QVariantMap Database::getDOTD(int id)
     }
 
     return dotdData;
+}
+
+
+// Misc
+void Database::checkDrivers()
+{
+    qDebug() << "Available drivers:" << QSqlDatabase::drivers();
 }

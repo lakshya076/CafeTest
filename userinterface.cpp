@@ -306,6 +306,8 @@ void UserInterface::checkoutFunction()
     std::regex numberRegex(R"([\d\.]+)");
     std::smatch match;
     double price;
+    QString orderID = QUuid::createUuid().toString(QUuid::WithoutBraces);
+
 
     if (std::regex_search(priceStr, match, numberRegex)) {
         price = std::stod(match.str());
@@ -315,16 +317,51 @@ void UserInterface::checkoutFunction()
     }
 
     if (ui->optionDD->currentIndex() != -1) {
-        qDebug() << "Current Option:" << ui->optionDD->currentText() << "Price:" << price;
+        qDebug() << "Order ID:" << orderID << "Option:" << ui->optionDD->currentText() << "Price:" << price;
+        qDebug() << "Order Details:";
+
+        // Write to File
+        QFile file("order.txt");
+
+        if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            QTextStream out(&file);
+
+            QVariantMap user = Database::getUserData();
+
+            out << "User Details: " << user["uid"].toString() << ", " << user["name"].toString() << "\n\n";
+            out << "Order ID: " << orderID << "\n";
+            out << "Option: " << ui->optionDD->currentText() << "\n";
+            out << "Price: Rs " << price << "\n\n";
+            out << "Order Details: " << "\n";
+
+            for (auto it = orderDetails.constBegin(); it != orderDetails.constEnd(); ++it) {
+                QVariantMap tempData = Database::getItem(it.key());
+                qDebug() << tempData["name"].toString() << ": Quantity" << it.value();
+
+                out << tempData["name"].toString() << " : Quantity " << it.value() << "\n"; // Writing to File
+            }
+
+            // DOTD Section
+
+            if (!ui->dotdAddToCart->isChecked()) {
+                QVariantMap tempDOTD = Database::getDOTD();
+                out << tempDOTD["name"].toString() << " : Quantity 1" << "\n";
+            }
+
+            file.close();
+            qDebug() << "Order written to file successfully.";
+        } else {
+            qDebug() << "Error opening order.txt for writing!";
+        }
 
         // Add Animation
-
         QPropertyAnimation *animation = new QPropertyAnimation(ui->checkout, "geometry");
         animation->setDuration(200);
         animation->setStartValue(ui->checkout->geometry());
         animation->setEndValue(ui->checkout->geometry()); // slight shrink
         animation->setEasingCurve(QEasingCurve::OutBounce);
         animation->start();
+
     } else {
         qDebug() << "No Option selected.";
         QMessageBox::critical(this, "Error", "Select an option (Dining/Takeaway)");
@@ -349,8 +386,8 @@ void UserInterface::openLicenseFunction()
     QProcess::startDetached("notepad.exe", QStringList() << targetPath);
 }
 
-// Code to Handle Card Events
 
+// Code to Handle Card Events
 void UserInterface::addHorizontalDivider()
 {
     QFrame *line = new QFrame();
@@ -387,15 +424,7 @@ void UserInterface::loadCardsFromDatabase()
         int availableQty = query.value(7).toInt();
 
         // Create a new card widget
-        CardWidget *card = new CardWidget(id,
-                                          name,
-                                          isVeg,
-                                          indicator1,
-                                          indicator2,
-                                          indicator3,
-                                          price,
-                                          availableQty,
-                                          this);
+        CardWidget *card = new CardWidget(id, name, isVeg, indicator1, indicator2, indicator3, price, availableQty, this);
 
         // Connect signals
         connect(card, &CardWidget::quantityChanged, this, &UserInterface::onCardQuantityChanged);
@@ -411,7 +440,6 @@ void UserInterface::loadCardsFromDatabase()
         cardWidgets[id] = card;
     }
 
-    // Add a stretching spacer at the end to push cards to the top
     cardsLayout->addStretch();
 }
 
@@ -420,6 +448,8 @@ void UserInterface::onCardQuantityChanged(int id, int delta, double price)
     // Update the total cost
     totalCost += delta * price;
     updateTotalCostLabel();
+    orderDetails[id] += 1;
+    qDebug() << "Quantity for" << id << ":" << orderDetails[id];
 }
 
 void UserInterface::onAddToCart(int id)
@@ -427,9 +457,7 @@ void UserInterface::onAddToCart(int id)
     if (cardWidgets.contains(id)) {
         CardWidget *card = cardWidgets[id];
         if (card->getQuantity() > 0) {
-            // Here you would add the item to a cart or process the order
-            // For simplicity, we'll just show a message
-            qDebug() << "Added item " << id << " to cart with quantity " << card->getQuantity();
+            qDebug() << "Added" << id << "to order";
         }
     }
 }
@@ -448,7 +476,6 @@ void UserInterface::updateTotalCostLabel()
 }
 
 // Dish Of The Day
-
 void UserInterface::dotdAddToCartFunction()
 {
     if (!ui->dotdAddToCart->isChecked()) {
@@ -518,6 +545,6 @@ void UserInterface::submitFeedbackFunction()
         file.close();
         qDebug() << "Feedback written to file successfully.";
     } else {
-        qDebug() << "Error opening file for writing!";
+        qDebug() << "Error opening feedback.txt for writing!";
     }
 }

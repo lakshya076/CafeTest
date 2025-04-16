@@ -13,6 +13,7 @@
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QWidget>
+#include <QUuid>
 #include "cardwidget.h"
 
 namespace Ui {
@@ -52,6 +53,7 @@ private:
 
     double totalCost;
     QVariantMap dotd;
+    QMap<int, int> orderDetails;
 
     void loadCardsFromDatabase();
     void updateTotalCostLabel();
