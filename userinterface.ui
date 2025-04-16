@@ -769,7 +769,7 @@
          <string notr="true"/>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="home_page">
          <property name="styleSheet">
@@ -791,8 +791,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>98</width>
-                 <height>28</height>
+                 <width>631</width>
+                 <height>611</height>
                 </rect>
                </property>
               </widget>
@@ -910,7 +910,7 @@
                   <widget class="QLabel" name="dotdIndi1">
                    <property name="font">
                     <font>
-                     <pointsize>16</pointsize>
+                     <pointsize>14</pointsize>
                     </font>
                    </property>
                    <property name="text">
@@ -938,7 +938,7 @@
                   <widget class="QLabel" name="dotdIndi2">
                    <property name="font">
                     <font>
-                     <pointsize>16</pointsize>
+                     <pointsize>14</pointsize>
                     </font>
                    </property>
                    <property name="text">
@@ -966,7 +966,7 @@
                   <widget class="QLabel" name="dotdIndi3">
                    <property name="font">
                     <font>
-                     <pointsize>16</pointsize>
+                     <pointsize>14</pointsize>
                     </font>
                    </property>
                    <property name="text">
@@ -1661,8 +1661,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>714</width>
-               <height>710</height>
+               <width>537</width>
+               <height>637</height>
               </rect>
              </property>
              <property name="styleSheet">
@@ -2129,8 +2129,8 @@ border-radius:10px;</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>233</width>
-               <height>599</height>
+               <width>191</width>
+               <height>537</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_20">
@@ -2572,7 +2572,7 @@ border-radius: 10px;
      <x>0</x>
      <y>0</y>
      <width>1284</width>
-     <height>25</height>
+     <height>33</height>
     </rect>
    </property>
   </widget>
