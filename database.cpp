@@ -14,13 +14,13 @@ bool Database::setupDatabase(QString dbPath)
 
     // Create tables if it doesn't exist
     if (!query.exec("CREATE TABLE IF NOT EXISTS users ("
-               "uid TEXT PRIMARY KEY NOT NULL UNIQUE,"
-               "name TEXT NOT NULL,"
-               "phone TEXT NOT NULL UNIQUE,"
-               "year TEXT,"
-               "batch TEXT,"
-               "password TEXT NOT NULL,"
-               "logged_in INTEGER DEFAULT 0 CHECK (logged_in IN (0, 1)));")) {
+                    "uid TEXT PRIMARY KEY NOT NULL UNIQUE,"
+                    "name TEXT NOT NULL,"
+                    "phone TEXT NOT NULL UNIQUE,"
+                    "year TEXT,"
+                    "batch TEXT,"
+                    "password TEXT NOT NULL,"
+                    "logged_in INTEGER DEFAULT 0 CHECK (logged_in IN (0, 1)));")) {
         qDebug() << "Error creating users table:" << query.lastError().text();
         return false;
     }
@@ -55,8 +55,13 @@ bool Database::setupDatabase(QString dbPath)
     return true;
 }
 
-bool Database::insertUser(const QString& uid, const QString& name, const QString& phone,
-                          const QString& year, const QString& batch, const QString& password){
+bool Database::insertUser(const QString &uid,
+                          const QString &name,
+                          const QString &phone,
+                          const QString &year,
+                          const QString &batch,
+                          const QString &password)
+{
     // Only Calls when user registers
     QSqlQuery query;
 
@@ -76,7 +81,8 @@ bool Database::insertUser(const QString& uid, const QString& name, const QString
     return true;
 }
 
-void Database::readData(){
+void Database::readData()
+{
     QSqlQuery query("SELECT * FROM users");
 
     while (query.next()) {
@@ -86,13 +92,16 @@ void Database::readData(){
         std::string year = query.value("year").toString().toStdString();
         std::string batch = query.value("batch").toString().toStdString();
 
-        qDebug() << "uid:" << uid << "| Name:" << name << "| Phone:" << phone << "| Year:" << year << "| Batch:" << batch;
+        qDebug() << "uid:" << uid << "| Name:" << name << "| Phone:" << phone << "| Year:" << year
+                 << "| Batch:" << batch;
     }
 }
 
-QVariantMap Database::getUserData(const QString& uid, const QString& password) {
+QVariantMap Database::getUserData(const QString &uid, const QString &password)
+{
     QSqlQuery query;
-    query.prepare("SELECT uid, password, email, logged_in FROM users WHERE uid = :uid AND password = :password");
+    query.prepare("SELECT uid, password, email, logged_in FROM users WHERE uid = :uid AND password "
+                  "= :password");
     query.bindValue(":uid", uid);
     query.bindValue(":password", password);
 
@@ -114,7 +123,8 @@ QVariantMap Database::getUserData(const QString& uid, const QString& password) {
     return userData;
 }
 
-QVariantMap Database::getUserData(){
+QVariantMap Database::getUserData()
+{
     QSqlQuery query;
     query.prepare("SELECT uid, name, phone, year, batch, logged_in FROM users WHERE logged_in=1");
 
@@ -138,7 +148,8 @@ QVariantMap Database::getUserData(){
     return userData;
 }
 
-QVariantMap Database::getUserData(const QString& uid) {
+QVariantMap Database::getUserData(const QString &uid)
+{
     QSqlQuery query;
     query.prepare("SELECT uid, name, phone, year, batch, logged_in FROM users WHERE uid = :uid");
     query.bindValue(":uid", uid);
@@ -163,18 +174,20 @@ QVariantMap Database::getUserData(const QString& uid) {
     return userData;
 }
 
-bool Database::uidValid(const QString& uid){
+bool Database::uidValid(const QString &uid)
+{
     QSqlQuery query;
     query.prepare("SELECT 1 FROM users WHERE uid = :uid LIMIT 1");
     query.bindValue(":uid", uid);
 
     if (!query.exec() || !query.next()) {
-        return false;  // User does not exist
+        return false; // User does not exist
     }
     return true;
 }
 
-bool Database::uidValid(const QString& uid, const QString& password) {
+bool Database::uidValid(const QString &uid, const QString &password)
+{
     QSqlQuery query;
 
     query.prepare("SELECT 1 FROM users WHERE uid = :uid AND password = :password LIMIT 1");
@@ -184,7 +197,8 @@ bool Database::uidValid(const QString& uid, const QString& password) {
     return query.exec() && query.next();
 }
 
-bool Database::changePassword(const QString& uid, const QString& password){
+bool Database::changePassword(const QString &uid, const QString &password)
+{
     QSqlQuery query;
 
     // Check if the user exists before updating the password
@@ -198,7 +212,7 @@ bool Database::changePassword(const QString& uid, const QString& password){
 
     // Update password for the user
     query.prepare("UPDATE users SET password = :newPassword WHERE uid = :uid");
-    query.bindValue(":newPassword", password);  // Consider hashing before storing
+    query.bindValue(":newPassword", password); // Consider hashing before storing
     query.bindValue(":uid", uid);
 
     if (!query.exec()) {
@@ -206,10 +220,11 @@ bool Database::changePassword(const QString& uid, const QString& password){
         return false;
     }
 
-    return query.numRowsAffected() > 0;  // True if the password was updated
+    return query.numRowsAffected() > 0; // True if the password was updated
 }
 
-bool Database::logout(){
+bool Database::logout()
+{
     QSqlQuery query;
 
     // Update all users to logged_out (logged_in = 0)
@@ -221,7 +236,8 @@ bool Database::logout(){
     return query.numRowsAffected() > 0;
 }
 
-void Database::setUserLoggedIn(const QString& uid) {
+void Database::setUserLoggedIn(const QString &uid)
+{
     QSqlQuery query;
 
     if (!query.exec("UPDATE users SET logged_in = 0")) { // Safeguard condition
@@ -236,14 +252,15 @@ void Database::setUserLoggedIn(const QString& uid) {
     if (query.exec()) {
         qDebug() << "Set the current user to logged_in=1";
         return;
-    }
-    else {
-        qDebug() << "Failed to update logged_in status for user:" << uid << "Error:" << query.lastError().text();
+    } else {
+        qDebug() << "Failed to update logged_in status for user:" << uid
+                 << "Error:" << query.lastError().text();
         return;
     }
 }
 
-bool Database::checkLogged(){
+bool Database::checkLogged()
+{
     QSqlQuery query("SELECT * FROM users WHERE logged_in = 1");
 
     if (query.exec()) {
@@ -257,20 +274,25 @@ bool Database::checkLogged(){
     return false;
 }
 
-void Database::checkDrivers() {
-    qDebug() << "Available drivers:" << QSqlDatabase::drivers();    
+void Database::checkDrivers()
+{
+    qDebug() << "Available drivers:" << QSqlDatabase::drivers();
 }
-
 
 // Cafe Interface Functions
 
-void Database::addItem(const QString& name, const bool& is_vegetarian, const QString& indicator1,
-                       const QString& indicator2, const QString& indicator3, const double& price,
-                       const int& available_qty){
-
+void Database::addItem(const QString &name,
+                       const bool &is_vegetarian,
+                       const QString &indicator1,
+                       const QString &indicator2,
+                       const QString &indicator3,
+                       const double &price,
+                       const int &available_qty)
+{
     QSqlQuery query;
-    query.prepare("INSERT INTO items (name, is_vegetarian, indicator1, indicator2, indicator3, price, available_qty) "
-                        "VALUES (?, ?, ?, ?, ?, ?, ?)");
+    query.prepare("INSERT INTO items (name, is_vegetarian, indicator1, indicator2, indicator3, "
+                  "price, available_qty) "
+                  "VALUES (?, ?, ?, ?, ?, ?, ?)");
 
     query.bindValue(0, name);
     query.bindValue(1, is_vegetarian);
@@ -287,7 +309,8 @@ void Database::addItem(const QString& name, const bool& is_vegetarian, const QSt
     qDebug() << "Item inserted successfully";
 }
 
-void Database::populateDD(QComboBox* DD){
+void Database::populateDD(QComboBox *DD)
+{
     QSqlQuery query;
 
     if (query.exec("SELECT id, name FROM items")) {
@@ -301,13 +324,14 @@ void Database::populateDD(QComboBox* DD){
     }
 }
 
-void Database::deleteItem(int id, QComboBox* deleteDD){
+void Database::deleteItem(int id, QComboBox *deleteDD)
+{
     QSqlQuery query;
 
     query.prepare("DELETE FROM items WHERE id = :id");
     query.bindValue(":id", id);
 
-    if(!query.exec()) {
+    if (!query.exec()) {
         qDebug() << "Error Deleting Item:" << query.lastError().text();
         return;
     }
@@ -316,7 +340,8 @@ void Database::deleteItem(int id, QComboBox* deleteDD){
     deleteDD->setCurrentIndex(-1);
 }
 
-void Database::updateItem(int id, double price, int qty, QString table) {
+void Database::updateItem(int id, double price, int qty, QString table)
+{
     QSqlQuery query;
 
     if (table.toStdString() == "items") {
@@ -335,7 +360,8 @@ void Database::updateItem(int id, double price, int qty, QString table) {
     qDebug() << "Price and Quantity updated successfully.";
 }
 
-void Database::updateItem(int id, double price, QString table) {
+void Database::updateItem(int id, double price, QString table)
+{
     QSqlQuery query;
 
     if (table.toStdString() == "items") {
@@ -353,7 +379,8 @@ void Database::updateItem(int id, double price, QString table) {
     qDebug() << "Price updated successfully.";
 }
 
-void Database::updateItem(int id, int qty, QString table) {
+void Database::updateItem(int id, int qty, QString table)
+{
     QSqlQuery query;
 
     if (table.toStdString() == "items") {
@@ -371,12 +398,14 @@ void Database::updateItem(int id, int qty, QString table) {
     qDebug() << "Quantity updated successfully.";
 }
 
-QVariantMap Database::getDOTD() {
+QVariantMap Database::getDOTD()
+{
     QDate today = QDate::currentDate();
     int day = today.dayOfWeek();
 
     QSqlQuery query;
-    query.prepare("SELECT name, is_vegetarian, indicator1, indicator2, indicator3, price, available_qty FROM dotd WHERE :id = id");
+    query.prepare("SELECT name, is_vegetarian, indicator1, indicator2, indicator3, price, "
+                  "available_qty FROM dotd WHERE :id = id");
     query.bindValue(":id", day);
 
     QVariantMap dotdData;
@@ -400,9 +429,11 @@ QVariantMap Database::getDOTD() {
     return dotdData;
 }
 
-QVariantMap Database::getDOTD(int id) {
+QVariantMap Database::getDOTD(int id)
+{
     QSqlQuery query;
-    query.prepare("SELECT name, is_vegetarian, indicator1, indicator2, indicator3, price, available_qty FROM dotd WHERE :id = id");
+    query.prepare("SELECT name, is_vegetarian, indicator1, indicator2, indicator3, price, "
+                  "available_qty FROM dotd WHERE :id = id");
     query.bindValue(":id", id);
 
     QVariantMap dotdData;

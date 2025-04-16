@@ -1,11 +1,8 @@
 #include "add.h"
-#include "ui_add.h"
-#include "database.h"
 #include "customlineedit.h"
+#include "database.h"
+#include "ui_add.h"
 
-#include <QMessageBox>
-#include <QDoubleValidator>
-#include <QIntValidator>
 
 QString addError_css = "border: 2px solid #D9534F; font:12pt; border-radius:10px; padding:2 10px;";
 QString textBoxStyleSheet = R"(
@@ -81,10 +78,9 @@ QString addStyleSheet = R"(
         background-color: #485A7A;
     })";
 
-
-Add::Add(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::Add)
+Add::Add(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::Add)
 {
     ui->setupUi(this);
 
@@ -115,7 +111,8 @@ Add::~Add()
     delete ui;
 }
 
-void Add::addItemFunction(){
+void Add::addItemFunction()
+{
     css_reset();
     name = ui->itemName->text();
 
@@ -134,29 +131,24 @@ void Add::addItemFunction(){
     if (name.length() == 0) {
         ui->itemName->setStyleSheet(addError_css);
         ui->error_add->setText("Item Name cannot be blank");
-    }
-    else if (ui->itemDD->currentIndex() == -1) {
+    } else if (ui->itemDD->currentIndex() == -1) {
         ui->error_add->setText("Choose an option from the dropdown");
-    }
-    else if (ui->itemPrice->text().length() == 0) {
+    } else if (ui->itemPrice->text().length() == 0) {
         ui->itemPrice->setStyleSheet(addError_css);
         ui->error_add->setText("Enter a price");
-    }
-    else if (ui->itemPrice->text().toDouble() == 0.0) {
+    } else if (ui->itemPrice->text().toDouble() == 0.0) {
         ui->itemPrice->setStyleSheet(addError_css);
         ui->error_add->setText("Price cannot be zero");
-    }
-    else if (ui->itemAvailQty->text().length() == 0) {
+    } else if (ui->itemAvailQty->text().length() == 0) {
         ui->itemAvailQty->setStyleSheet(addError_css);
         ui->error_add->setText("Enter available quantity");
-    }
-    else if (ui->itemAvailQty->text().toInt() == 0) {
+    } else if (ui->itemAvailQty->text().toInt() == 0) {
         ui->itemAvailQty->setStyleSheet(addError_css);
         ui->error_add->setText("Available Quantity cannot be zero");
-    }
-    else {
-        qDebug() << "Name:" << name << "Vegetarian:" << isVeg << "Indicator 1:" << indicatorOne << "Indicator 2:" << indicatorTwo <<
-            "Indicator 3:" << indicatorThree << "Price:" << price << "Available Quantity:" << availqty;
+    } else {
+        qDebug() << "Name:" << name << "Vegetarian:" << isVeg << "Indicator 1:" << indicatorOne
+                 << "Indicator 2:" << indicatorTwo << "Indicator 3:" << indicatorThree
+                 << "Price:" << price << "Available Quantity:" << availqty;
 
         Database::addItem(name, isVeg, indicatorOne, indicatorTwo, indicatorThree, price, availqty);
 
@@ -165,7 +157,8 @@ void Add::addItemFunction(){
     }
 }
 
-void Add::css_reset(){
+void Add::css_reset()
+{
     this->setStyleSheet(addStyleSheet);
     ui->error_add->clear();
     ui->itemName->setStyleSheet(textBoxStyleSheet);
@@ -176,7 +169,8 @@ void Add::css_reset(){
     ui->itemIndiThree->setStyleSheet(textBoxStyleSheet);
 }
 
-void Add::reset(){
+void Add::reset()
+{
     ui->itemName->clear();
     ui->itemDD->setCurrentIndex(-1);
     ui->itemPrice->clear();
@@ -187,7 +181,8 @@ void Add::reset(){
     ui->error_add->clear();
 }
 
-void Add::keyPressEvent(QKeyEvent* event){
+void Add::keyPressEvent(QKeyEvent *event)
+{
     if (event->key() == Qt::Key_Escape) {
         qDebug() << "Escape key ignored!";
         return; // Ignore the Escape key press

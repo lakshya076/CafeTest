@@ -1,24 +1,25 @@
 #ifndef INTERFACECHOOSER_H
 #define INTERFACECHOOSER_H
 
-#include <QWidget>
 #include <QDialog>
-#include <QKeyEvent>
 #include <QFile>
+#include <QKeyEvent>
+#include <QWidget>
 
 namespace Ui {
 class InterfaceChooser;
 }
 
-class InterfaceChooser : public QDialog {
+class InterfaceChooser : public QDialog
+{
     Q_OBJECT
 
 public:
-    explicit InterfaceChooser(QWidget* parent = nullptr);
+    explicit InterfaceChooser(QWidget *parent = nullptr);
     ~InterfaceChooser();
 
 protected:
-    void keyPressEvent(QKeyEvent* event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 private slots:
     void userInterfaceFunction();

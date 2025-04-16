@@ -3,32 +3,33 @@
 
 #include <regex>
 
-#include <QWidget>
-#include <QDialog>
-#include <QKeyEvent>
 #include <QDebug>
+#include <QDialog>
 #include <QFile>
-#include <QPushButton>
-#include <QtUiTools/QUiLoader>
-#include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QStackedWidget>
-#include <QLineEdit>
+#include <QKeyEvent>
 #include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QStackedWidget>
+#include <QVBoxLayout>
+#include <QWidget>
+#include <QtUiTools/QUiLoader>
 
 namespace Ui {
 class Startup;
 }
 
-class Startup : public QDialog{
+class Startup : public QDialog
+{
     Q_OBJECT
 
 public:
-    explicit Startup(QWidget* parent = nullptr);
+    explicit Startup(QWidget *parent = nullptr);
     ~Startup();
 
 protected:
-    void keyPressEvent(QKeyEvent* event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 private:
     Ui::Startup *ui;

@@ -1,8 +1,8 @@
 #include "cafeinterface.h"
-#include "ui_cafeinterface.h"
 #include "add.h"
 #include "delete.h"
 #include "dotd.h"
+#include "ui_cafeinterface.h"
 #include "update.h"
 
 CafeInterface::CafeInterface(QWidget *parent)
@@ -22,22 +22,26 @@ CafeInterface::~CafeInterface()
     delete ui;
 }
 
-void CafeInterface::redirectAdd(){
+void CafeInterface::redirectAdd()
+{
     Add *addDialog = new Add(this);
     addDialog->exec();
 }
 
-void CafeInterface::redirectDelete(){
+void CafeInterface::redirectDelete()
+{
     Delete *deleteDialog = new Delete(this);
     deleteDialog->exec();
 }
 
-void CafeInterface::redirectDOTD(){
+void CafeInterface::redirectDOTD()
+{
     Dotd *dotdDialog = new Dotd(this);
     dotdDialog->exec();
 }
 
-void CafeInterface::redirectUpdate(){
+void CafeInterface::redirectUpdate()
+{
     Update *updateDialog = new Update(this);
     updateDialog->exec();
 }

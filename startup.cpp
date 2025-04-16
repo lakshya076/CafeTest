@@ -1,17 +1,18 @@
 #include "startup.h"
-#include "ui_startup.h"
-#include "database.h"
-#include "clickablelabel.h"
-#include <regex>
-#include <QLabel>
 #include <QFile>
-#include <QMessageBox>
 #include <QIntValidator>
+#include <QLabel>
+#include <QMessageBox>
+#include "clickablelabel.h"
+#include "database.h"
+#include "ui_startup.h"
+#include <regex>
 
 const std::regex Startup::uid_regex(R"(^\d+$)");
 const std::regex Startup::year_regex(R"(^\d{4}$)");
 const std::regex Startup::phone_regex(R"(^\d{10}$)");
-const std::regex Startup::pass_regex(R"(^[A-Za-z0-9!@#\$%\^&\*\(\)_\+\-=\{\}:\";'.,\/<>?\|\[\]]{8,20}$)");
+const std::regex Startup::pass_regex(
+    R"(^[A-Za-z0-9!@#\$%\^&\*\(\)_\+\-=\{\}:\";'.,\/<>?\|\[\]]{8,20}$)");
 
 QString error_css = "border: 2px solid #D9534F; font:12pt; border-radius:10px; padding:2 10px;";
 
@@ -75,8 +76,8 @@ QPushButton[secondary="true"]:hover {
 }
 )";
 
-
-void passwordReset() {
+void passwordReset()
+{
     QMessageBox msg;
     msg.setIcon(QMessageBox::Information);
     msg.setWindowTitle("Password Reset");
@@ -85,9 +86,9 @@ void passwordReset() {
     msg.exec();
 }
 
-Startup::Startup(QWidget* parent) :
-    QDialog(parent),
-    ui(new Ui::Startup)
+Startup::Startup(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::Startup)
 {
     ui->setupUi(this);
 
@@ -140,9 +141,10 @@ Startup::Startup(QWidget* parent) :
     connect(ui->r_direct_reg, &ClickableLabel::clicked, this, &Startup::redirect_register);
 }
 
-Startup::~Startup(){}
+Startup::~Startup() {}
 
-void Startup::redirect_register(){
+void Startup::redirect_register()
+{
     setWindowTitle("Register");
     ui->uid_register->setText("");
     ui->nfield_register->setText("");
@@ -156,7 +158,8 @@ void Startup::redirect_register(){
     ui->stack->setCurrentIndex(1);
 }
 
-void Startup::redirect_login(){
+void Startup::redirect_login()
+{
     setWindowTitle("Login");
     ui->uid_login->setText("");
     ui->pfield_login->setText("");
@@ -165,7 +168,8 @@ void Startup::redirect_login(){
     ui->stack->setCurrentIndex(2);
 }
 
-void Startup::redirect_reset(){
+void Startup::redirect_reset()
+{
     setWindowTitle("Reset Password");
     ui->uid_reset->setText("");
     ui->pfield_reset->setText("");
@@ -175,34 +179,39 @@ void Startup::redirect_reset(){
     ui->stack->setCurrentIndex(3);
 }
 
-void Startup::register_enter_check(){
-        if (! (! (ui->uid_register->text() != "")) || ! (ui->nfield_register->text() != "")
-        || ! (ui->pnfield_register->text() != "") || ! (ui->yfield_register->text() != "")
-        || ! (ui->bfield_register->text() != "") || ! (ui->pfield_register->text() != "")
-        || ! (ui->cpfield_register->text() != "")){
-            registerFunction();
-        } else{
-            ui->error_register->setText("Please fill in all the details");
-        }
+void Startup::register_enter_check()
+{
+    if (!(!(ui->uid_register->text() != "")) || !(ui->nfield_register->text() != "")
+        || !(ui->pnfield_register->text() != "") || !(ui->yfield_register->text() != "")
+        || !(ui->bfield_register->text() != "") || !(ui->pfield_register->text() != "")
+        || !(ui->cpfield_register->text() != "")) {
+        registerFunction();
+    } else {
+        ui->error_register->setText("Please fill in all the details");
+    }
 }
 
-void Startup::login_enter_check(){
-    if (! (! (ui->uid_login->text() != "") || ! (ui->pfield_login->text() != ""))){
+void Startup::login_enter_check()
+{
+    if (!(!(ui->uid_login->text() != "") || !(ui->pfield_login->text() != ""))) {
         loginFunction();
-    } else{
+    } else {
         ui->error_login->setText("Please fill in all the details.");
     }
 }
 
-void Startup::reset_enter_check(){
-    if (! (! (ui->uid_reset->text() != "") || ! (ui->pfield_reset->text() != "") || ! (ui->cpfield_reset->text() != ""))){
+void Startup::reset_enter_check()
+{
+    if (!(!(ui->uid_reset->text() != "") || !(ui->pfield_reset->text() != "")
+          || !(ui->cpfield_reset->text() != ""))) {
         resetFunction();
-    } else{
+    } else {
         ui->error_reset->setText("Please fill in all the details.");
     }
 }
 
-void Startup::registerFunction(){
+void Startup::registerFunction()
+{
     css_reset();
     reg_uid = ui->uid_register->text();
     reg_name = ui->nfield_register->text();
@@ -213,49 +222,43 @@ void Startup::registerFunction(){
     reg_confirmPassword = ui->cpfield_register->text();
 
     if (reg_uid.length() == 0 || reg_password.length() == 0 || reg_confirmPassword.length() == 0
-        || reg_name.length() == 0 || reg_phone.length() == 0 || reg_year.length() == 0 || reg_batch.length() == 0){
+        || reg_name.length() == 0 || reg_phone.length() == 0 || reg_year.length() == 0
+        || reg_batch.length() == 0) {
         ui->error_register->setText("Please fill in all inputs.");
-    }
-    else if (!std::regex_match(reg_uid.toStdString(), uid_regex)){
+    } else if (!std::regex_match(reg_uid.toStdString(), uid_regex)) {
         ui->error_register->setText("Enter a valid Enrollment Number");
         ui->uid_register->setStyleSheet(error_css);
-    }
-    else if (reg_password.length() < 8) {
+    } else if (reg_password.length() < 8) {
         ui->error_register->setText("Password cannot be less than 8 characters");
         ui->pfield_register->setStyleSheet(error_css);
         ui->cpfield_register->setStyleSheet(error_css);
-    }
-    else if (reg_password != reg_confirmPassword) {
+    } else if (reg_password != reg_confirmPassword) {
         ui->error_register->setText("Passwords do not match");
         ui->pfield_register->setStyleSheet(error_css);
         ui->cpfield_register->setStyleSheet(error_css);
-    }
-    else if (!std::regex_match(reg_password.toStdString(), pass_regex)){
+    } else if (!std::regex_match(reg_password.toStdString(), pass_regex)) {
         ui->error_register->setText("Enter a valid password");
         ui->pfield_register->setStyleSheet(error_css);
         ui->cpfield_register->setStyleSheet(error_css);
-    }
-    else if (!std::regex_match(reg_phone.toStdString(), phone_regex)){
+    } else if (!std::regex_match(reg_phone.toStdString(), phone_regex)) {
         ui->error_register->setText("Enter a valid phone number");
         ui->pnfield_register->setStyleSheet(error_css);
-    }
-    else if (!std::regex_match(reg_year.toStdString(), year_regex)){
+    } else if (!std::regex_match(reg_year.toStdString(), year_regex)) {
         ui->error_register->setText("Enter a valid year of passing");
         ui->yfield_register->setStyleSheet(error_css);
-    }
-    else {
+    } else {
         if (Database::uidValid(reg_uid)) {
             qDebug() << "uid exists in the database.";
             ui->error_register->setText("uid already exists");
             ui->uid_register->setStyleSheet(error_css);
-        }
-        else {
+        } else {
             qDebug() << "Registering";
             Database::insertUser(reg_uid, reg_name, reg_phone, reg_year, reg_batch, reg_password);
 
             //Checking if user exists in table
             QVariantMap user = Database::getUserData(reg_uid);
-            qDebug() << user["uid"] << " " << user["name"] << " " << user["phone"] << user["year"] << user["batch"] << user["logged_in"];
+            qDebug() << user["uid"] << " " << user["name"] << " " << user["phone"] << user["year"]
+                     << user["batch"] << user["logged_in"];
 
             qDebug() << "Registration done.";
             done(1);
@@ -263,27 +266,27 @@ void Startup::registerFunction(){
     }
 }
 
-void Startup::loginFunction(){
+void Startup::loginFunction()
+{
     css_reset();
     log_uid = ui->uid_login->text();
     log_password = ui->pfield_login->text();
 
-    if (log_uid.length() == 0 || log_password.length() == 0){
+    if (log_uid.length() == 0 || log_password.length() == 0) {
         ui->error_login->setText("Please fill in all the inputs.");
         ui->uid_login->setStyleSheet(error_css);
         ui->pfield_login->setStyleSheet(error_css);
-    }
-    else {
-        if (Database::uidValid(log_uid, log_password)){
+    } else {
+        if (Database::uidValid(log_uid, log_password)) {
             Database::setUserLoggedIn(log_uid);
 
             QVariantMap user = Database::getUserData(log_uid);
-            qDebug() << user["uid"] << " " << user["name"] << " " << user["phone"] << user["year"] << user["batch"] << user["logged_in"];
+            qDebug() << user["uid"] << " " << user["name"] << " " << user["phone"] << user["year"]
+                     << user["batch"] << user["logged_in"];
 
             qDebug() << "Login done.";
             done(1);
-        }
-        else {
+        } else {
             ui->error_login->setText("Incorrect Credentials.");
             ui->uid_login->setStyleSheet(error_css);
             ui->pfield_login->setStyleSheet(error_css);
@@ -291,19 +294,21 @@ void Startup::loginFunction(){
     }
 }
 
-void Startup::resetFunction(){
+void Startup::resetFunction()
+{
     css_reset();
     ui->error_reset->setText("");
     reset_uid = ui->uid_reset->text();
     reset_password = ui->pfield_reset->text();
     reset_confirmPassword = ui->cpfield_reset->text();
 
-    if (reset_uid.length() == 0 || reset_password.length() == 0 || reset_confirmPassword.length() == 0){
+    if (reset_uid.length() == 0 || reset_password.length() == 0
+        || reset_confirmPassword.length() == 0) {
         ui->error_reset->setText("Please fill in all the inputs.");
-    } else if (reset_password.length() < 8){
+    } else if (reset_password.length() < 8) {
         ui->error_reset->setText("Password too short.");
         ui->pfield_reset->setStyleSheet(error_css);
-    }else if (reset_password != reset_confirmPassword){
+    } else if (reset_password != reset_confirmPassword) {
         ui->error_reset->setText("Passwords do not match.");
         ui->pfield_reset->setStyleSheet(error_css);
         ui->cpfield_reset->setStyleSheet(error_css);
@@ -318,15 +323,15 @@ void Startup::resetFunction(){
             } else {
                 qDebug() << "Failed to change password.";
             }
-        }
-        else {
+        } else {
             ui->error_reset->setText("User does not exist");
             ui->uid_reset->setStyleSheet(error_css);
         }
     }
 }
 
-void Startup::css_reset(){
+void Startup::css_reset()
+{
     ui->uid_register->setStyleSheet(startup_lineEdit_css);
     ui->nfield_register->setStyleSheet(startup_lineEdit_css);
     ui->pnfield_register->setStyleSheet(startup_lineEdit_css);
@@ -341,7 +346,8 @@ void Startup::css_reset(){
     ui->cpfield_reset->setStyleSheet(startup_lineEdit_css);
 }
 
-void Startup::keyPressEvent(QKeyEvent* event){
+void Startup::keyPressEvent(QKeyEvent *event)
+{
     if (event->key() == Qt::Key_Escape) {
         qDebug() << "Escape key ignored!";
         return; // Ignore the Escape key press

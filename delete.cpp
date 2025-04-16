@@ -1,7 +1,7 @@
 #include "delete.h"
-#include "ui_delete.h"
-#include "database.h"
 #include <QString>
+#include "database.h"
+#include "ui_delete.h"
 
 QString deleteStyleSheet = R"(
     QComboBox {
@@ -46,10 +46,9 @@ QString deleteStyleSheet = R"(
         background-color: #485A7A;
     })";
 
-
-Delete::Delete(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::Delete)
+Delete::Delete(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::Delete)
 {
     ui->setupUi(this);
 
@@ -66,14 +65,15 @@ Delete::~Delete()
     delete ui;
 }
 
-void Delete::deleteItemFunction(){
+void Delete::deleteItemFunction()
+{
     int id = ui->deleteDD->currentData().toInt();
 
     Database::deleteItem(id, ui->deleteDD);
-
 }
 
-void Delete::keyPressEvent(QKeyEvent* event){
+void Delete::keyPressEvent(QKeyEvent *event)
+{
     if (event->key() == Qt::Key_Escape) {
         qDebug() << "Escape key ignored!";
         return; // Ignore the Escape key press

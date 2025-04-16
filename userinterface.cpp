@@ -1,7 +1,7 @@
 #include "userinterface.h"
-#include "ui_userinterface.h"
 #include "database.h"
 #include "ripplebutton.h"
+#include "ui_userinterface.h"
 
 #include <QButtonGroup>
 #include <regex>
@@ -139,7 +139,8 @@ QString dotdAddToCartCss = R"(
 )";
 
 UserInterface::UserInterface(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::UserInterface)
+    : QMainWindow(parent)
+    , ui(new Ui::UserInterface)
 {
     ui->setupUi(this);
 
@@ -190,12 +191,21 @@ UserInterface::UserInterface(QWidget *parent)
     connect(ui->exit_collapse, &QPushButton::clicked, this, &UserInterface::exitFunction);
     connect(ui->exit_expand, &QPushButton::clicked, this, &UserInterface::exitFunction);
 
-    connect(ui->license_cred_collapse, &QPushButton::clicked, this, &UserInterface::creditLicenseFunction);
-    connect(ui->license_cred_expand, &QPushButton::clicked, this, &UserInterface::creditLicenseFunction);
+    connect(ui->license_cred_collapse,
+            &QPushButton::clicked,
+            this,
+            &UserInterface::creditLicenseFunction);
+    connect(ui->license_cred_expand,
+            &QPushButton::clicked,
+            this,
+            &UserInterface::creditLicenseFunction);
 
     connect(ui->checkout, &RippleButton::clicked, this, &UserInterface::checkoutFunction);
 
-    connect(ui->submitFeedbackButton, &QPushButton::clicked, this, &UserInterface::submitFeedbackFunction);
+    connect(ui->submitFeedbackButton,
+            &QPushButton::clicked,
+            this,
+            &UserInterface::submitFeedbackFunction);
 
     // Dish of The Day section
     dotd = Database::getDOTD();
@@ -239,30 +249,39 @@ UserInterface::UserInterface(QWidget *parent)
     ui->feedbackDD2->addItem("10", 10);
 }
 
-UserInterface::~UserInterface() {
+UserInterface::~UserInterface()
+{
     delete ui;
 }
 
-void UserInterface::homeFunction() {
+void UserInterface::homeFunction()
+{
     ui->stack->setCurrentIndex(0);
 }
 
-void UserInterface::feedbackFunction() {
+void UserInterface::feedbackFunction()
+{
     ui->stack->setCurrentIndex(1);
 }
 
-void UserInterface::settingsFunction() {
+void UserInterface::settingsFunction()
+{
     ui->stack->setCurrentIndex(2);
 }
 
-void UserInterface::creditLicenseFunction() {
+void UserInterface::creditLicenseFunction()
+{
     ui->stack->setCurrentIndex(3);
 }
 
-void UserInterface::logoutFunction() {
+void UserInterface::logoutFunction()
+{
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Logout", "Are you sure you want to logout?",
-                                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    reply = QMessageBox::question(this,
+                                  "Logout",
+                                  "Are you sure you want to logout?",
+                                  QMessageBox::Yes | QMessageBox::No,
+                                  QMessageBox::No);
 
     if (reply == QMessageBox::Yes) {
         if (Database::logout()) {
@@ -276,12 +295,14 @@ void UserInterface::logoutFunction() {
     }
 }
 
-void UserInterface::exitFunction() {
+void UserInterface::exitFunction()
+{
     qDebug() << "Exiting";
     close();
 }
 
-void UserInterface::checkoutFunction() {
+void UserInterface::checkoutFunction()
+{
     std::string priceStr = ui->totalCostLabel->text().toStdString();
     std::regex numberRegex(R"([\d\.]+)");
     std::smatch match;
@@ -294,7 +315,7 @@ void UserInterface::checkoutFunction() {
         qDebug() << "No number found in totalCostLabel";
     }
 
-    if (ui->optionDD->currentIndex() != -1){
+    if (ui->optionDD->currentIndex() != -1) {
         qDebug() << "Current Option:" << ui->optionDD->currentText() << "Price:" << price;
 
         // Add Animation
@@ -311,7 +332,8 @@ void UserInterface::checkoutFunction() {
     }
 }
 
-void UserInterface::openLicenseFunction() {
+void UserInterface::openLicenseFunction()
+{
     QString resourcePath = ":/license.txt";
     QString targetDir = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
     QString targetPath = QDir(targetDir).filePath("license.txt");
@@ -328,11 +350,11 @@ void UserInterface::openLicenseFunction() {
     QProcess::startDetached("notepad.exe", QStringList() << targetPath);
 }
 
-
 // Code to Handle Card Events
 
-void UserInterface::addHorizontalDivider() {
-    QFrame* line = new QFrame();
+void UserInterface::addHorizontalDivider()
+{
+    QFrame *line = new QFrame();
     line->setFrameShape(QFrame::HLine);
     line->setFrameShadow(QFrame::Sunken);
     line->setLineWidth(1);
@@ -344,9 +366,11 @@ void UserInterface::addHorizontalDivider() {
     addVerticalSpacer(5);
 }
 
-void UserInterface::loadCardsFromDatabase() {
+void UserInterface::loadCardsFromDatabase()
+{
     QSqlQuery query;
-    query.prepare("SELECT id, name, is_vegetarian, indicator1, indicator2, indicator3, price, available_qty FROM items");
+    query.prepare("SELECT id, name, is_vegetarian, indicator1, indicator2, indicator3, price, "
+                  "available_qty FROM items");
 
     if (!query.exec()) {
         qDebug() << "Query failed:" << query.lastError().text();
@@ -364,7 +388,15 @@ void UserInterface::loadCardsFromDatabase() {
         int availableQty = query.value(7).toInt();
 
         // Create a new card widget
-        CardWidget *card = new CardWidget(id, name, isVeg, indicator1, indicator2, indicator3, price, availableQty, this);
+        CardWidget *card = new CardWidget(id,
+                                          name,
+                                          isVeg,
+                                          indicator1,
+                                          indicator2,
+                                          indicator3,
+                                          price,
+                                          availableQty,
+                                          this);
 
         // Connect signals
         connect(card, &CardWidget::quantityChanged, this, &UserInterface::onCardQuantityChanged);
@@ -384,13 +416,15 @@ void UserInterface::loadCardsFromDatabase() {
     cardsLayout->addStretch();
 }
 
-void UserInterface::onCardQuantityChanged(int id, int delta, double price) {
+void UserInterface::onCardQuantityChanged(int id, int delta, double price)
+{
     // Update the total cost
     totalCost += delta * price;
     updateTotalCostLabel();
 }
 
-void UserInterface::onAddToCart(int id) {
+void UserInterface::onAddToCart(int id)
+{
     if (cardWidgets.contains(id)) {
         CardWidget *card = cardWidgets[id];
         if (card->getQuantity() > 0) {
@@ -401,19 +435,23 @@ void UserInterface::onAddToCart(int id) {
     }
 }
 
-void UserInterface::updateTotalCostLabel() {
+void UserInterface::updateTotalCostLabel()
+{
     ui->totalCostLabel->setText(QString("Total Cost: Rs %1").arg(totalCost, 0, 'f', 2));
-    ui->totalCostLabel->setStyleSheet("QLabel { color: #50E3C2; font-weight: bold; padding: 5px; }");
+    ui->totalCostLabel->setStyleSheet(
+        "QLabel { color: #50E3C2; font-weight: bold; padding: 5px; }");
 
     // Return to normal style after a short delay
     QTimer::singleShot(500, [this]() {
-        ui->totalCostLabel->setStyleSheet("QLabel { color: #FFFFFF; font-weight: bold; padding: 5px; }");
+        ui->totalCostLabel->setStyleSheet(
+            "QLabel { color: #FFFFFF; font-weight: bold; padding: 5px; }");
     });
 }
 
 // Dish Of The Day
 
-void UserInterface::dotdAddToCartFunction() {
+void UserInterface::dotdAddToCartFunction()
+{
     if (!ui->dotdAddToCart->isChecked()) {
         qDebug() << "Added Dish of The Day to Cart";
         ui->dotdAddToCart->setChecked(false);
@@ -432,7 +470,8 @@ void UserInterface::dotdAddToCartFunction() {
 }
 
 // Feedback
-void UserInterface::submitFeedbackFunction() {
+void UserInterface::submitFeedbackFunction()
+{
     int feed1 = ui->feedbackDD1->currentData().toInt();
     int feed2 = ui->feedbackDD2->currentData().toInt();
 

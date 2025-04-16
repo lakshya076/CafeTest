@@ -5,7 +5,7 @@
 #include <QWidget>
 #include "ui_cardwidget.h"
 
-namespace Ui{
+namespace Ui {
 class CardWidget;
 }
 
@@ -14,9 +14,14 @@ class CardWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit CardWidget(int id, const QString &name, bool isVeg,
-                        const QString &indicator1, const QString &indicator2,
-                        const QString &indicator3, double price, int availableQty,
+    explicit CardWidget(int id,
+                        const QString &name,
+                        bool isVeg,
+                        const QString &indicator1,
+                        const QString &indicator2,
+                        const QString &indicator3,
+                        double price,
+                        int availableQty,
                         QWidget *parent = nullptr);
     ~CardWidget();
 

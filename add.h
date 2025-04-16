@@ -4,6 +4,9 @@
 
 #include <QDialog>
 #include <QKeyEvent>
+#include <QDoubleValidator>
+#include <QIntValidator>
+#include <QMessageBox>
 
 namespace Ui {
 class Add;
@@ -35,7 +38,6 @@ private:
     QString indicatorOne;
     QString indicatorTwo;
     QString indicatorThree;
-
 };
 
 #endif // ADD_H

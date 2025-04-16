@@ -1,11 +1,11 @@
 #include "dotd.h"
-#include "ui_dotd.h"
-#include "database.h"
-#include "customlineedit.h"
 #include <QDate>
-#include <QIntValidator>
 #include <QDoubleValidator>
+#include <QIntValidator>
 #include <QMessageBox>
+#include "customlineedit.h"
+#include "database.h"
+#include "ui_dotd.h"
 
 QString dotdStyleSheet = R"(
     QLineEdit {
@@ -65,9 +65,9 @@ QString dotdStyleSheet = R"(
         background-color: #485A7A;
     })";
 
-Dotd::Dotd(QWidget* parent) :
-    QDialog(parent),
-    ui(new Ui::Dotd)
+Dotd::Dotd(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::Dotd)
 {
     ui->setupUi(this);
 
@@ -84,7 +84,7 @@ Dotd::Dotd(QWidget* parent) :
     ui->dotdDD->addItem("Saturday", 6);
     ui->dotdDD->addItem("Sunday", 7);
 
-    ui->dotdDD->setCurrentIndex(day-1);
+    ui->dotdDD->setCurrentIndex(day - 1);
     onDotdDDChanged();
 
     // Setting Validators
@@ -96,11 +96,13 @@ Dotd::Dotd(QWidget* parent) :
     connect(ui->updateDotdButton, &QPushButton::clicked, this, &Dotd::updateDotdFunction);
 }
 
-Dotd::~Dotd() {
+Dotd::~Dotd()
+{
     delete ui;
 }
 
-void Dotd::onDotdDDChanged() {
+void Dotd::onDotdDDChanged()
+{
     QVariantMap dotd = Database::getDOTD(ui->dotdDD->currentData().toInt());
     qDebug() << dotd["name"] << dotd["is_vegetarian"] << dotd["indicator1"] << dotd["indicator2"]
              << dotd["indicator3"] << dotd["price"] << dotd["available_qty"];
@@ -111,43 +113,38 @@ void Dotd::onDotdDDChanged() {
     ui->dotdIndi3CI->setText(dotd["indicator3"].toString());
 }
 
-void Dotd::updateDotdFunction() {
+void Dotd::updateDotdFunction()
+{
     int id = ui->dotdDD->currentData().toInt();
     dotdPriceNew = ui->dotdNewPrice->text().toDouble();
     dotdQtyNew = ui->dotdNewQty->text().toInt();
 
     if (ui->dotdNewPrice->text().length() == 0 && ui->dotdNewQty->text().length() == 0) {
         QMessageBox::critical(this, "Error", "Enter at least one value to update");
-    }
-    else if (ui->dotdNewPrice->text().length() != 0 && ui->dotdNewQty->text().length() == 0) {
-        if (ui->dotdNewPrice->text().toDouble() == 0.0){
+    } else if (ui->dotdNewPrice->text().length() != 0 && ui->dotdNewQty->text().length() == 0) {
+        if (ui->dotdNewPrice->text().toDouble() == 0.0) {
             QMessageBox::warning(this, "Warning", "Updated Price cannot be zero");
-        }
-        else {
+        } else {
             qDebug() << "Only DOTD price will be updated";
             Database::updateItem(id, dotdPriceNew, QString::fromStdString("dotd"));
 
             QMessageBox::information(this, "Info", "Price updated successfully");
             ui->dotdNewPrice->clear();
         }
-    }
-    else if (ui->dotdNewPrice->text().length() == 0 && ui->dotdNewQty->text().length() != 0) {
+    } else if (ui->dotdNewPrice->text().length() == 0 && ui->dotdNewQty->text().length() != 0) {
         if (ui->dotdNewQty->text().toInt() == 0) {
             QMessageBox::warning(this, "Warning", "Updated Quantity cannot be zero");
-        }
-        else {
+        } else {
             qDebug() << "Only DOTD quantity will be updated";
             Database::updateItem(id, dotdQtyNew, QString::fromStdString("dotd"));
 
             QMessageBox::information(this, "Info", "Quantity updated successfully");
             ui->dotdNewQty->clear();
         }
-    }
-    else if (ui->dotdNewPrice->text().length() != 0 && ui->dotdNewQty->text().length() != 0) {
+    } else if (ui->dotdNewPrice->text().length() != 0 && ui->dotdNewQty->text().length() != 0) {
         if (ui->dotdNewPrice->text().toDouble() == 0 || ui->dotdNewQty->text().toInt() == 0) {
             QMessageBox::warning(this, "Warning", "Values cannot be zero");
-        }
-        else {
+        } else {
             qDebug() << "Both DOTD price and quantity will be updated";
             Database::updateItem(id, dotdPriceNew, dotdQtyNew, QString::fromStdString("dotd"));
 
@@ -158,7 +155,8 @@ void Dotd::updateDotdFunction() {
     }
 }
 
-void Dotd::keyPressEvent(QKeyEvent* event) {
+void Dotd::keyPressEvent(QKeyEvent *event)
+{
     if (event->key() == Qt::Key_Escape) {
         qDebug() << "Escape key ignored!";
         return; // Ignore the Escape key press

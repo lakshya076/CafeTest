@@ -1,15 +1,16 @@
 #include <QApplication>
-#include <QStyle>
-#include <QMainWindow>
 #include <QCoreApplication>
+#include <QMainWindow>
+#include <QStyle>
 
-#include "startup.h"
-#include "interfacechooser.h"
-#include "database.h"
 #include "CafeInterface.h"
+#include "database.h"
+#include "interfacechooser.h"
+#include "startup.h"
 #include "userinterface.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     QApplication app(argc, argv);
     // Sample id pass
     // 992401030010 , 12qw12qw
@@ -27,22 +28,20 @@ int main(int argc, char *argv[]) {
 
     Database::setupDatabase(QDir::cleanPath(fullPath));
 
-
     InterfaceChooser interfaceDialog;
     int result = interfaceDialog.exec();
-    if (result == 1){
-
+    if (result == 1) {
         // Load the startup QDialog
-        if (Database::checkLogged()){
+        if (Database::checkLogged()) {
             QVariantMap user = Database::getUserData();
-            qDebug() << user["uid"] << user["name"] << user["phone"] << user["year"] << user["batch"] << user["logged_in"];
+            qDebug() << user["uid"] << user["name"] << user["phone"] << user["year"]
+                     << user["batch"] << user["logged_in"];
 
             UserInterface mainWindow;
 
             mainWindow.show();
             return app.exec();
-        }
-        else {
+        } else {
             Startup startupDialog;
             int startupResult = startupDialog.exec();
             if (startupResult == 1) { // User Registered or Logged In
@@ -53,8 +52,7 @@ int main(int argc, char *argv[]) {
                 return 0;
             }
         }
-    }
-    else if (result == 2) {
+    } else if (result == 2) {
         CafeInterface cafe;
         cafe.show();
         return app.exec();

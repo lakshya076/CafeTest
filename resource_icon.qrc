@@ -1,18 +1,18 @@
 <RCC>
-  <qresource prefix="icons">
-    <file>Icons/feedback.ico</file>
-    <file>Icons/addcart.ico</file>
-    <file>Icons/backward.ico</file>
-    <file>Icons/delete.ico</file>
-    <file>Icons/exit_main.ico</file>
-    <file>Icons/forward.ico</file>
-    <file>Icons/home_checked.ico</file>
-    <file>Icons/home_unchecked.ico</file>
-    <file>Icons/license.png</file>
-    <file>Icons/logout.ico</file>
-    <file>Icons/menu.ico</file>
-    <file>Icons/search_dark.ico</file>
-    <file>Icons/settings_checked.ico</file>
-    <file>Icons/settings_unchecked.ico</file>
-  </qresource>
+    <qresource prefix="/icons">
+        <file>Icons/feedback.ico</file>
+        <file>Icons/addcart.ico</file>
+        <file>Icons/backward.ico</file>
+        <file>Icons/delete.ico</file>
+        <file>Icons/exit_main.ico</file>
+        <file>Icons/forward.ico</file>
+        <file>Icons/home_checked.ico</file>
+        <file>Icons/home_unchecked.ico</file>
+        <file>Icons/license.png</file>
+        <file>Icons/logout.ico</file>
+        <file>Icons/menu.ico</file>
+        <file>Icons/search_dark.ico</file>
+        <file>Icons/settings_checked.ico</file>
+        <file>Icons/settings_unchecked.ico</file>
+    </qresource>
 </RCC>

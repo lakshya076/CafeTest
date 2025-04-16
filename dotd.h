@@ -13,7 +13,7 @@ class Dotd : public QDialog
     Q_OBJECT
 
 public:
-    explicit Dotd(QWidget* parent = nullptr);
+    explicit Dotd(QWidget *parent = nullptr);
     ~Dotd();
 
 private slots:
@@ -21,7 +21,7 @@ private slots:
     void updateDotdFunction();
 
 protected:
-    void keyPressEvent(QKeyEvent* event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 private:
     Ui::Dotd *ui;

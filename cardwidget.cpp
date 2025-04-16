@@ -2,11 +2,21 @@
 #include "cardwidget.h"
 #include <QIcon>
 
-CardWidget::CardWidget(int id, const QString &name, bool isVeg,
-                       const QString &indicator1, const QString &indicator2,
-                       const QString &indicator3, double price, int availableQty,
+CardWidget::CardWidget(int id,
+                       const QString &name,
+                       bool isVeg,
+                       const QString &indicator1,
+                       const QString &indicator2,
+                       const QString &indicator3,
+                       double price,
+                       int availableQty,
                        QWidget *parent)
-    : QWidget(parent), ui(new Ui::CardWidget), m_id(id), m_price(price), m_quantity(0), m_availableQty(availableQty)
+    : QWidget(parent)
+    , ui(new Ui::CardWidget)
+    , m_id(id)
+    , m_price(price)
+    , m_quantity(0)
+    , m_availableQty(availableQty)
 {
     ui->setupUi(this);
 
@@ -36,9 +46,7 @@ CardWidget::CardWidget(int id, const QString &name, bool isVeg,
     updateVisibility();
 }
 
-CardWidget::~CardWidget()
-{
-}
+CardWidget::~CardWidget() {}
 
 void CardWidget::onIncrement()
 {

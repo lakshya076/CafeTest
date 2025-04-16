@@ -1,8 +1,8 @@
 #include "ripplebutton.h"
-#include <QPainter>
 #include <QMouseEvent>
+#include <QPainter>
 
-RippleButton::RippleButton(QWidget* parent)
+RippleButton::RippleButton(QWidget *parent)
     : QPushButton(parent)
 {
     m_anim = new QPropertyAnimation(this, "rippleRadius", this);
@@ -10,12 +10,14 @@ RippleButton::RippleButton(QWidget* parent)
     m_anim->setEasingCurve(QEasingCurve::OutCubic);
 }
 
-void RippleButton::setRippleRadius(qreal radius) {
+void RippleButton::setRippleRadius(qreal radius)
+{
     m_rippleRadius = radius;
     update(); // Trigger repaint
 }
 
-void RippleButton::mousePressEvent(QMouseEvent* event) {
+void RippleButton::mousePressEvent(QMouseEvent *event)
+{
     m_clickPos = event->pos();
     setRippleRadius(0);
 
@@ -27,7 +29,8 @@ void RippleButton::mousePressEvent(QMouseEvent* event) {
     QPushButton::mousePressEvent(event); // Still trigger click
 }
 
-void RippleButton::paintEvent(QPaintEvent* event) {
+void RippleButton::paintEvent(QPaintEvent *event)
+{
     QPushButton::paintEvent(event); // draw normal button
 
     if (m_rippleRadius > 0.0) {
@@ -36,6 +39,8 @@ void RippleButton::paintEvent(QPaintEvent* event) {
         QColor rippleColor = QColor(0, 0, 0, 60); // semi-transparent black
         p.setBrush(rippleColor);
         p.setPen(Qt::NoPen);
-        p.drawEllipse(m_clickPos, static_cast<int>(m_rippleRadius), static_cast<int>(m_rippleRadius));
+        p.drawEllipse(m_clickPos,
+                      static_cast<int>(m_rippleRadius),
+                      static_cast<int>(m_rippleRadius));
     }
 }

@@ -23,6 +23,5 @@ private slots:
 
 private:
     Ui::CafeInterface *ui;
-
 };
 #endif // MAINWINDOW_H

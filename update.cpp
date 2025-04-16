@@ -1,12 +1,11 @@
 #include "update.h"
-#include "ui_update.h"
-#include "database.h"
 #include "customlineedit.h"
+#include "database.h"
+#include "ui_update.h"
 
 #include <QDoubleValidator>
 #include <QIntValidator>
 #include <QMessageBox>
-
 
 QString updateStyleSheet = R"(
     QLineEdit {
@@ -66,10 +65,9 @@ QString updateStyleSheet = R"(
         background-color: #485A7A;
     })";
 
-
-Update::Update(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::Update)
+Update::Update(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::Update)
 {
     ui->setupUi(this);
 
@@ -89,19 +87,18 @@ Update::~Update()
     delete ui;
 }
 
-void Update::updateItemFunction(){
+void Update::updateItemFunction()
+{
     int id = ui->updateDD->currentData().toInt();
     priceNew = ui->updateNewPrice->text().toDouble();
     qtyNew = ui->updateNewQty->text().toInt();
 
     if (ui->updateNewPrice->text().length() == 0 && ui->updateNewQty->text().length() == 0) {
         QMessageBox::critical(this, "Error", "Enter at least one value");
-    }
-    else if (ui->updateNewPrice->text().length() != 0 && ui->updateNewQty->text().length() == 0) {
-        if (ui->updateNewPrice->text().toDouble() == 0.0){
+    } else if (ui->updateNewPrice->text().length() != 0 && ui->updateNewQty->text().length() == 0) {
+        if (ui->updateNewPrice->text().toDouble() == 0.0) {
             QMessageBox::warning(this, "Warning", "Updated Price cannot be zero");
-        }
-        else {
+        } else {
             qDebug() << "Only price will be updated";
             Database::updateItem(id, priceNew, QString::fromStdString("items"));
             ui->updateDD->setCurrentIndex(-1);
@@ -109,12 +106,10 @@ void Update::updateItemFunction(){
             QMessageBox::information(this, "Info", "Price updated successfully");
             ui->updateNewPrice->clear();
         }
-    }
-    else if (ui->updateNewPrice->text().length() == 0 && ui->updateNewQty->text().length() != 0) {
+    } else if (ui->updateNewPrice->text().length() == 0 && ui->updateNewQty->text().length() != 0) {
         if (ui->updateNewQty->text().toInt() == 0) {
             QMessageBox::warning(this, "Warning", "Updated Quantity cannot be zero");
-        }
-        else {
+        } else {
             qDebug() << "Only quantity will be updated";
             Database::updateItem(id, qtyNew, QString::fromStdString("items"));
             ui->updateDD->setCurrentIndex(-1);
@@ -122,12 +117,10 @@ void Update::updateItemFunction(){
             QMessageBox::information(this, "Info", "Quantity updated successfully");
             ui->updateNewQty->clear();
         }
-    }
-    else if (ui->updateNewPrice->text().length() != 0 && ui->updateNewQty->text().length() != 0) {
+    } else if (ui->updateNewPrice->text().length() != 0 && ui->updateNewQty->text().length() != 0) {
         if (ui->updateNewPrice->text().toDouble() == 0 || ui->updateNewQty->text().toInt() == 0) {
             QMessageBox::warning(this, "Warning", "Values cannot be zero");
-        }
-        else {
+        } else {
             qDebug() << "Both price and quantity will be updated";
             Database::updateItem(id, priceNew, qtyNew, QString::fromStdString("items"));
             ui->updateDD->setCurrentIndex(-1);
@@ -139,7 +132,8 @@ void Update::updateItemFunction(){
     }
 }
 
-void Update::keyPressEvent(QKeyEvent* event){
+void Update::keyPressEvent(QKeyEvent *event)
+{
     if (event->key() == Qt::Key_Escape) {
         qDebug() << "Escape key ignored!";
         return; // Ignore the Escape key press

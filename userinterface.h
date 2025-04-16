@@ -1,19 +1,18 @@
 #ifndef USERINTERFACE_H
 #define USERINTERFACE_H
 
-#include <QMainWindow>
-#include <QPushButton>
-#include <QMessageBox>
-#include <QWidget>
-#include <QVBoxLayout>
-#include <QSpacerItem>
-#include <QPropertyAnimation>
-#include <QTimer>
+#include <QDir>
 #include <QFile>
+#include <QMainWindow>
 #include <QMessageBox>
 #include <QProcess>
+#include <QPropertyAnimation>
+#include <QPushButton>
+#include <QSpacerItem>
 #include <QStandardPaths>
-#include <QDir>
+#include <QTimer>
+#include <QVBoxLayout>
+#include <QWidget>
 #include "cardwidget.h"
 
 namespace Ui {
@@ -49,7 +48,7 @@ private slots:
 private:
     Ui::UserInterface *ui;
     QVBoxLayout *cardsLayout;
-    QMap<int, CardWidget*> cardWidgets; // Map to store cards by ID
+    QMap<int, CardWidget *> cardWidgets; // Map to store cards by ID
 
     double totalCost;
     QVariantMap dotd;
@@ -57,8 +56,9 @@ private:
     void loadCardsFromDatabase();
     void updateTotalCostLabel();
 
-    void addVerticalSpacer(int height) {
-        QSpacerItem* spacer = new QSpacerItem(20, height, QSizePolicy::Minimum, QSizePolicy::Fixed);
+    void addVerticalSpacer(int height)
+    {
+        QSpacerItem *spacer = new QSpacerItem(20, height, QSizePolicy::Minimum, QSizePolicy::Fixed);
         cardsLayout->addItem(spacer);
     }
 };
