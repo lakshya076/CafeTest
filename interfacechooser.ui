@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>InterfaceChooser</class>
+ <widget class="QDialog" name="InterfaceChooser">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>419</width>
+    <height>232</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QPushButton" name="userInterfaceButton">
+     <property name="minimumSize">
+      <size>
+       <width>401</width>
+       <height>101</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border:1px solid #3FA7D6 ; border-radius: 10px;</string>
+     </property>
+     <property name="text">
+      <string>User Interface</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="cafeInterfaceButton">
+     <property name="minimumSize">
+      <size>
+       <width>401</width>
+       <height>101</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border:1px solid #3FA7D6 ; border-radius: 10px;</string>
+     </property>
+     <property name="text">
+      <string>Cafe Interface</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>1</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
