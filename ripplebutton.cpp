@@ -1,6 +1,4 @@
 #include "ripplebutton.h"
-#include <QMouseEvent>
-#include <QPainter>
 
 RippleButton::RippleButton(QWidget *parent)
     : QPushButton(parent)

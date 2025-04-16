@@ -1,6 +1,5 @@
 // cardwidget.cpp
 #include "cardwidget.h"
-#include <QIcon>
 
 CardWidget::CardWidget(int id,
                        const QString &name,

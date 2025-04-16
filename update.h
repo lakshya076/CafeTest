@@ -3,6 +3,9 @@
 
 #include <QDialog>
 #include <QKeyEvent>
+#include <QDoubleValidator>
+#include <QIntValidator>
+#include <QMessageBox>
 
 namespace Ui {
 class Update;

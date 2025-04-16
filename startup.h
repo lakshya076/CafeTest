@@ -14,7 +14,10 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 #include <QWidget>
-#include <QtUiTools/QUiLoader>
+#include <QFile>
+#include <QIntValidator>
+#include <QLabel>
+#include <QMessageBox>
 
 namespace Ui {
 class Startup;

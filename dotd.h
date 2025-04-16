@@ -3,6 +3,10 @@
 
 #include <QDialog>
 #include <QKeyEvent>
+#include <QDate>
+#include <QDoubleValidator>
+#include <QIntValidator>
+#include <QMessageBox>
 
 namespace Ui {
 class Dotd;

@@ -1,8 +1,4 @@
 #include "dotd.h"
-#include <QDate>
-#include <QDoubleValidator>
-#include <QIntValidator>
-#include <QMessageBox>
 #include "customlineedit.h"
 #include "database.h"
 #include "ui_dotd.h"

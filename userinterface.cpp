@@ -3,7 +3,6 @@
 #include "ripplebutton.h"
 #include "ui_userinterface.h"
 
-#include <QButtonGroup>
 #include <regex>
 
 QString main_css = R"(

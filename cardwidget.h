@@ -3,6 +3,7 @@
 #define CARDWIDGET_H
 
 #include <QWidget>
+#include <QIcon>
 #include "ui_cardwidget.h"
 
 namespace Ui {

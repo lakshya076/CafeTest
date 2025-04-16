@@ -3,10 +3,6 @@
 #include "database.h"
 #include "ui_update.h"
 
-#include <QDoubleValidator>
-#include <QIntValidator>
-#include <QMessageBox>
-
 QString updateStyleSheet = R"(
     QLineEdit {
         background-color: #2D2D2D;

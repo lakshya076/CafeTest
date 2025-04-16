@@ -1,8 +1,4 @@
 #include "startup.h"
-#include <QFile>
-#include <QIntValidator>
-#include <QLabel>
-#include <QMessageBox>
 #include "clickablelabel.h"
 #include "database.h"
 #include "ui_startup.h"
