@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
         // Load the startup QDialog
         if (Database::checkLogged()) {
             QVariantMap user = Database::getUserData();
+            qDebug();
             qDebug() << user["uid"] << user["name"] << user["phone"] << user["year"]
                      << user["batch"] << user["logged_in"];
 

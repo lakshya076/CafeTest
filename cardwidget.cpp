@@ -1,4 +1,3 @@
-// cardwidget.cpp
 #include "cardwidget.h"
 
 CardWidget::CardWidget(int id,

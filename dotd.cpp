@@ -111,6 +111,7 @@ void Dotd::onDotdDDChanged()
 
 void Dotd::updateDotdFunction()
 {
+    qDebug();
     int id = ui->dotdDD->currentData().toInt();
     dotdPriceNew = ui->dotdNewPrice->text().toDouble();
     dotdQtyNew = ui->dotdNewQty->text().toInt();
@@ -154,8 +155,7 @@ void Dotd::updateDotdFunction()
 void Dotd::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape) {
-        qDebug() << "Escape key ignored!";
-        return; // Ignore the Escape key press
+        return;
     }
     QDialog::keyPressEvent(event);
 }

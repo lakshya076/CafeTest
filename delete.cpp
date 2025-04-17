@@ -75,8 +75,7 @@ void Delete::deleteItemFunction()
 void Delete::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape) {
-        qDebug() << "Escape key ignored!";
-        return; // Ignore the Escape key press
+        return;
     }
     QDialog::keyPressEvent(event);
 }

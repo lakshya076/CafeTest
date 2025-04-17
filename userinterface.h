@@ -54,6 +54,7 @@ private:
     double totalCost;
     QVariantMap dotd;
     QMap<int, int> orderDetails;
+    QVariantMap user;
 
     void clearCards();
     void updateDatabaseQuantities();

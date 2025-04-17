@@ -208,6 +208,7 @@ void Startup::reset_enter_check()
 
 void Startup::registerFunction()
 {
+    qDebug();
     css_reset();
     reg_uid = ui->uid_register->text();
     reg_name = ui->nfield_register->text();
@@ -264,6 +265,7 @@ void Startup::registerFunction()
 
 void Startup::loginFunction()
 {
+    qDebug();
     css_reset();
     log_uid = ui->uid_login->text();
     log_password = ui->pfield_login->text();
@@ -292,6 +294,7 @@ void Startup::loginFunction()
 
 void Startup::resetFunction()
 {
+    qDebug();
     css_reset();
     ui->error_reset->setText("");
     reset_uid = ui->uid_reset->text();
@@ -345,8 +348,7 @@ void Startup::css_reset()
 void Startup::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape) {
-        qDebug() << "Escape key ignored!";
-        return; // Ignore the Escape key press
+        return;
     }
     QDialog::keyPressEvent(event);
 }

@@ -1,5 +1,7 @@
 #include "clickablelabel.h"
 
+// Custom QLabel class to make QLable clickable (used in Startup window)
+
 ClickableLabel::ClickableLabel(QWidget *parent)
     : QLabel(parent)
 {}

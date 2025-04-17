@@ -113,6 +113,8 @@ Add::~Add()
 
 void Add::addItemFunction()
 {
+    qDebug();
+
     css_reset();
     name = ui->itemName->text();
 
@@ -155,6 +157,8 @@ void Add::addItemFunction()
         QMessageBox::information(this, "Success", "Item inserted successfully!");
         reset();
     }
+
+    qDebug();
 }
 
 void Add::css_reset()
@@ -184,8 +188,7 @@ void Add::reset()
 void Add::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Escape) {
-        qDebug() << "Escape key ignored!";
-        return; // Ignore the Escape key press
+        return;
     }
     QDialog::keyPressEvent(event);
 }

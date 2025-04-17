@@ -15,8 +15,6 @@ class Database
 {
 public:
     static bool setupDatabase(QString dbPath);
-    static void checkDrivers();
-    static void readData();
 
     // User table functions
     static bool insertUser(const QString &uid,
@@ -26,9 +24,7 @@ public:
                            const QString &batch,
                            const QString &password);
 
-    static QVariantMap getUserData(
-        const QString &uid,
-        const QString &password); // Obsolete (won't be used for security reasons)
+    static QVariantMap getUserData(const QString &uid, const QString &password); // Obsolete (won't be used for security reasons)
     static QVariantMap getUserData(const QString &uid); // Get data with just username given
     static QVariantMap getUserData();                   // Get data of user having logged_in=1
 

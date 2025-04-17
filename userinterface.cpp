@@ -145,6 +145,9 @@ UserInterface::UserInterface(QWidget *parent)
 
     setStyleSheet(main_css);
 
+    // Get Current User Data
+    user = Database::getUserData();
+
     // Create a QVBoxLayout for the scroll area
     cardsLayout = new QVBoxLayout(ui->scrollAreaWidgetContents);
     cardsLayout->setSpacing(0);
@@ -157,6 +160,7 @@ UserInterface::UserInterface(QWidget *parent)
     ui->cardsScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->cardsScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
+    // Loading all the cards from the database
     loadCardsFromDatabase();
 
     // Setting up Drop Down
@@ -190,28 +194,23 @@ UserInterface::UserInterface(QWidget *parent)
     connect(ui->exit_collapse, &QPushButton::clicked, this, &UserInterface::exitFunction);
     connect(ui->exit_expand, &QPushButton::clicked, this, &UserInterface::exitFunction);
 
-    connect(ui->license_cred_collapse,
-            &QPushButton::clicked,
-            this,
-            &UserInterface::creditLicenseFunction);
-    connect(ui->license_cred_expand,
-            &QPushButton::clicked,
-            this,
-            &UserInterface::creditLicenseFunction);
+    connect(ui->license_cred_collapse, &QPushButton::clicked, this, &UserInterface::creditLicenseFunction);
+    connect(ui->license_cred_expand, &QPushButton::clicked, this, &UserInterface::creditLicenseFunction);
 
     connect(ui->checkout, &RippleButton::clicked, this, &UserInterface::checkoutFunction);
 
-    connect(ui->submitFeedbackButton,
-            &QPushButton::clicked,
-            this,
-            &UserInterface::submitFeedbackFunction);
+    connect(ui->submitFeedbackButton, &QPushButton::clicked, this, &UserInterface::submitFeedbackFunction);
 
     // Dish of The Day section
     dotd = Database::getDOTD();
+    qDebug();
+    qDebug() << "Dish Of the Day";
     qDebug() << dotd["name"] << dotd["is_vegetarian"] << dotd["indicator1"] << dotd["indicator2"]
              << dotd["indicator3"] << dotd["price"] << dotd["available_qty"];
+    qDebug();
     ui->dotdName->setText(dotd["name"].toString());
 
+    // Setting the veg/nonveg icon
     if (dotd["is_vegetarian"].toBool()) {
         ui->dotdIsVeg->setPixmap(QIcon(":/icons/Icons/veg.png").pixmap(20, 20));
     } else {
@@ -276,11 +275,7 @@ void UserInterface::creditLicenseFunction()
 void UserInterface::logoutFunction()
 {
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this,
-                                  "Logout",
-                                  "Are you sure you want to logout?",
-                                  QMessageBox::Yes | QMessageBox::No,
-                                  QMessageBox::No);
+    reply = QMessageBox::question(this, "Logout", "Are you sure you want to logout?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
 
     if (reply == QMessageBox::Yes) {
         if (Database::logout()) {
@@ -311,16 +306,15 @@ void UserInterface::checkoutFunction()
     double price;
     QString orderID = QUuid::createUuid().toString(QUuid::WithoutBraces);
 
-
+    // Checking if there is a number in totalCostLabel
     if (std::regex_search(priceStr, match, numberRegex)) {
         price = std::stod(match.str());
     } else {
         qDebug() << "No number found in totalCostLabel";
     }
 
-
     if (ui->optionDD->currentIndex() != -1) {
-        // Check if we have any items in the cart
+        // Check if there are any items in the cart
         bool hasItems = false;
         for (auto card : cardWidgets.values()) {
             if (card->getQuantity() > 0) {
@@ -342,8 +336,6 @@ void UserInterface::checkoutFunction()
             if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
                 QTextStream out(&file);
 
-                QVariantMap user = Database::getUserData();
-
                 out << "User Details: " << user["uid"].toString() << ", " << user["name"].toString() << "\n\n";
                 out << "Order ID: " << orderID << "\n";
                 out << "Option: " << ui->optionDD->currentText() << "\n";
@@ -358,7 +350,6 @@ void UserInterface::checkoutFunction()
                 }
 
                 // DOTD Section
-
                 if (!ui->dotdAddToCart->isChecked()) {
                     QVariantMap tempDOTD = Database::getDOTD();
                     out << tempDOTD["name"].toString() << " : Quantity 1" << "\n";
@@ -393,6 +384,7 @@ void UserInterface::checkoutFunction()
     qDebug();
 }
 
+// Throws error
 void UserInterface::openLicenseFunction()
 {
     QString resourcePath = ":/license.txt";
@@ -412,7 +404,7 @@ void UserInterface::openLicenseFunction()
 }
 
 
-// Code to Handle Card Events
+// Card Events
 void UserInterface::addHorizontalDivider()
 {
     QFrame *line = new QFrame();
@@ -448,6 +440,7 @@ void UserInterface::loadCardsFromDatabase()
         double price = query.value(6).toDouble();
         int availableQty = query.value(7).toInt();
 
+        // Cards with availableQty=0 dont load in home screen
         if (availableQty == 0) {
             continue;
         }
@@ -488,18 +481,17 @@ void UserInterface::onAddToCart(int id)
 void UserInterface::updateTotalCostLabel()
 {
     ui->totalCostLabel->setText(QString("Total Cost: Rs %1").arg(totalCost, 0, 'f', 2));
-    ui->totalCostLabel->setStyleSheet(
-        "QLabel { color: #50E3C2; font-weight: bold; padding: 5px; }");
+    ui->totalCostLabel->setStyleSheet("QLabel { color: #50E3C2; font-weight: bold; padding: 5px; }");
 
     // Return to normal style after a short delay
     QTimer::singleShot(500, [this]() {
-        ui->totalCostLabel->setStyleSheet(
-            "QLabel { color: #FFFFFF; font-weight: bold; padding: 5px; }");
+        ui->totalCostLabel->setStyleSheet("QLabel { color: #FFFFFF; font-weight: bold; padding: 5px; }");
     });
 }
 
 void UserInterface::clearCards()
 {
+    // Function to clear cards in user interface from cardsScrollArea
     for (auto card : cardWidgets.values()) {
         cardsLayout->removeWidget(card);
         delete card;
@@ -519,15 +511,15 @@ void UserInterface::clearCards()
 
 void UserInterface::updateDatabaseQuantities()
 {
+    // Function to update available quantities of the items in the order in the database
     QSqlDatabase::database().transaction();
 
-    // For each card with non-zero quantity, update the database
     for (auto card : cardWidgets.values()) {
         int id = card->getId();
         int quantity = card->getQuantity();
 
         if (quantity > 0) {
-            // First get current available quantity from database
+            // Get current available quantity from database
             QSqlQuery selectQuery;
             selectQuery.prepare("SELECT available_qty FROM items WHERE id = ?");
             selectQuery.bindValue(0, id);
@@ -560,6 +552,7 @@ void UserInterface::updateDatabaseQuantities()
 
     QSqlDatabase::database().commit();
     qDebug() << "Available quantities updated for items";
+    qDebug();
 }
 
 
