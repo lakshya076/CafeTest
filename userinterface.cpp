@@ -350,8 +350,7 @@ void UserInterface::checkoutFunction()
 
                 // DOTD Section
                 if (!ui->dotdAddToCart->isChecked()) {
-                    QVariantMap tempDOTD = Database::getDOTD();
-                    out << tempDOTD["name"].toString() << " : Quantity 1" << "\n";
+                    out << dotd["name"].toString() << " : Quantity 1" << "\n";
                 }
 
                 file.close();

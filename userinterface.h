@@ -52,8 +52,8 @@ private:
     QMap<int, CardWidget *> cardWidgets; // Map to store cards by ID
 
     double totalCost;
-    QVariantMap dotd;
     QMap<int, int> orderDetails;
+    QVariantMap dotd;
     QVariantMap user;
 
     void clearCards();
