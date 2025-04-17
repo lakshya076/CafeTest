@@ -83,7 +83,6 @@ bool Database::insertUser(const QString &uid,
 
 QVariantMap Database::getUserData(const QString &uid, const QString &password)
 {
-    qDebug();
 
     QSqlQuery query;
     query.prepare("SELECT uid, password, email, logged_in FROM users WHERE uid = :uid AND password "
@@ -111,7 +110,6 @@ QVariantMap Database::getUserData(const QString &uid, const QString &password)
 
 QVariantMap Database::getUserData()
 {
-    qDebug();
     QSqlQuery query;
     query.prepare("SELECT uid, name, phone, year, batch, logged_in FROM users WHERE logged_in=1");
 
@@ -137,7 +135,6 @@ QVariantMap Database::getUserData()
 
 QVariantMap Database::getUserData(const QString &uid)
 {
-    qDebug();
     QSqlQuery query;
     query.prepare("SELECT uid, name, phone, year, batch, logged_in FROM users WHERE uid = :uid");
     query.bindValue(":uid", uid);
@@ -164,7 +161,6 @@ QVariantMap Database::getUserData(const QString &uid)
 
 bool Database::uidValid(const QString &uid)
 {
-    qDebug();
     QSqlQuery query;
     query.prepare("SELECT 1 FROM users WHERE uid = :uid LIMIT 1");
     query.bindValue(":uid", uid);
@@ -177,7 +173,6 @@ bool Database::uidValid(const QString &uid)
 
 bool Database::uidValid(const QString &uid, const QString &password)
 {
-    qDebug();
     QSqlQuery query;
 
     query.prepare("SELECT 1 FROM users WHERE uid = :uid AND password = :password LIMIT 1");
@@ -189,7 +184,6 @@ bool Database::uidValid(const QString &uid, const QString &password)
 
 bool Database::changePassword(const QString &uid, const QString &password)
 {
-    qDebug();
     QSqlQuery query;
 
     // Check if the user exists before updating the password
@@ -216,7 +210,6 @@ bool Database::changePassword(const QString &uid, const QString &password)
 
 bool Database::logout()
 {
-    qDebug();
     QSqlQuery query;
 
     // Update all users to logged_out (logged_in = 0)
@@ -230,7 +223,6 @@ bool Database::logout()
 
 void Database::setUserLoggedIn(const QString &uid)
 {
-    qDebug();
     QSqlQuery query;
 
     if (!query.exec("UPDATE users SET logged_in = 0")) { // Safeguard condition
@@ -267,9 +259,8 @@ bool Database::checkLogged()
     return false;
 }
 
-QVariantMap Database::getItem(const int &id) {
-    qDebug();
-
+QVariantMap Database::getItem(const int &id)
+{
     QSqlQuery query;
     query.prepare("SELECT name, available_qty FROM items where id = :id");
     query.bindValue(":id", id);
@@ -300,7 +291,6 @@ void Database::addItem(const QString &name,
                        const double &price,
                        const int &available_qty)
 {
-    qDebug();
     QSqlQuery query;
     query.prepare("INSERT INTO items (name, is_vegetarian, indicator1, indicator2, indicator3, "
                   "price, available_qty) "
@@ -323,7 +313,6 @@ void Database::addItem(const QString &name,
 
 void Database::populateDD(QComboBox *DD)
 {
-    qDebug();
     QSqlQuery query;
 
     if (query.exec("SELECT id, name FROM items")) {
@@ -339,7 +328,6 @@ void Database::populateDD(QComboBox *DD)
 
 void Database::deleteItem(int id, QComboBox *deleteDD)
 {
-    qDebug();
     QSqlQuery query;
 
     query.prepare("DELETE FROM items WHERE id = :id");
@@ -356,7 +344,6 @@ void Database::deleteItem(int id, QComboBox *deleteDD)
 
 void Database::updateItem(int id, double price, int qty, QString table)
 {
-    qDebug();
     QSqlQuery query;
 
     if (table.toStdString() == "items") {
@@ -377,7 +364,6 @@ void Database::updateItem(int id, double price, int qty, QString table)
 
 void Database::updateItem(int id, double price, QString table)
 {
-    qDebug();
     QSqlQuery query;
 
     if (table.toStdString() == "items") {
@@ -397,7 +383,6 @@ void Database::updateItem(int id, double price, QString table)
 
 void Database::updateItem(int id, int qty, QString table)
 {
-    qDebug();
     QSqlQuery query;
 
     if (table.toStdString() == "items") {
@@ -417,7 +402,6 @@ void Database::updateItem(int id, int qty, QString table)
 
 QVariantMap Database::getDOTD()
 {
-    qDebug();
     QDate today = QDate::currentDate();
     int day = today.dayOfWeek();
 
@@ -449,7 +433,6 @@ QVariantMap Database::getDOTD()
 
 QVariantMap Database::getDOTD(int id)
 {
-    qDebug();
     QSqlQuery query;
     query.prepare("SELECT name, is_vegetarian, indicator1, indicator2, indicator3, price, "
                   "available_qty FROM dotd WHERE :id = id");

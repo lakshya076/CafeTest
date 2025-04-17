@@ -207,7 +207,6 @@ UserInterface::UserInterface(QWidget *parent)
     qDebug() << "Dish Of the Day";
     qDebug() << dotd["name"] << dotd["is_vegetarian"] << dotd["indicator1"] << dotd["indicator2"]
              << dotd["indicator3"] << dotd["price"] << dotd["available_qty"];
-    qDebug();
     ui->dotdName->setText(dotd["name"].toString());
 
     // Setting the veg/nonveg icon
