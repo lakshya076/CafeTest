@@ -302,6 +302,9 @@ void UserInterface::exitFunction()
 
 void UserInterface::checkoutFunction()
 {
+    qDebug();
+    qDebug() << "Starting Checkout";
+
     std::string priceStr = ui->totalCostLabel->text().toStdString();
     std::regex numberRegex(R"([\d\.]+)");
     std::smatch match;
@@ -311,47 +314,67 @@ void UserInterface::checkoutFunction()
 
     if (std::regex_search(priceStr, match, numberRegex)) {
         price = std::stod(match.str());
-        qDebug() << "A number was found in totalCostLabel";
     } else {
         qDebug() << "No number found in totalCostLabel";
     }
 
+
     if (ui->optionDD->currentIndex() != -1) {
-        qDebug() << "Order ID:" << orderID << "Option:" << ui->optionDD->currentText() << "Price:" << price;
-        qDebug() << "Order Details:";
-
-        // Write to File
-        QFile file("order.txt");
-
-        if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            QTextStream out(&file);
-
-            QVariantMap user = Database::getUserData();
-
-            out << "User Details: " << user["uid"].toString() << ", " << user["name"].toString() << "\n\n";
-            out << "Order ID: " << orderID << "\n";
-            out << "Option: " << ui->optionDD->currentText() << "\n";
-            out << "Price: Rs " << price << "\n\n";
-            out << "Order Details: " << "\n";
-
-            for (auto it = orderDetails.constBegin(); it != orderDetails.constEnd(); ++it) {
-                QVariantMap tempData = Database::getItem(it.key());
-                qDebug() << tempData["name"].toString() << ": Quantity" << it.value();
-
-                out << tempData["name"].toString() << " : Quantity " << it.value() << "\n"; // Writing to File
+        // Check if we have any items in the cart
+        bool hasItems = false;
+        for (auto card : cardWidgets.values()) {
+            if (card->getQuantity() > 0) {
+                hasItems = true;
+                break;
             }
+        }
 
-            // DOTD Section
-
-            if (!ui->dotdAddToCart->isChecked()) {
-                QVariantMap tempDOTD = Database::getDOTD();
-                out << tempDOTD["name"].toString() << " : Quantity 1" << "\n";
-            }
-
-            file.close();
-            qDebug() << "Order written to file successfully.";
+        if (!hasItems) {
+            qDebug() << "No items in the cart";
+            return;
         } else {
-            qDebug() << "Error opening order.txt for writing!";
+            qDebug() << "Order ID:" << orderID << "Option:" << ui->optionDD->currentText() << "Price:" << price;
+            qDebug() << "Order Details:";
+
+            // Write to File
+            QFile file("order.txt");
+
+            if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                QTextStream out(&file);
+
+                QVariantMap user = Database::getUserData();
+
+                out << "User Details: " << user["uid"].toString() << ", " << user["name"].toString() << "\n\n";
+                out << "Order ID: " << orderID << "\n";
+                out << "Option: " << ui->optionDD->currentText() << "\n";
+                out << "Price: Rs " << price << "\n\n";
+                out << "Order Details: " << "\n";
+
+                for (auto it = orderDetails.constBegin(); it != orderDetails.constEnd(); ++it) {
+                    QVariantMap tempData = Database::getItem(it.key());
+                    qDebug() << tempData["name"].toString() << ": Quantity" << it.value();
+
+                    out << tempData["name"].toString() << " : Quantity " << it.value() << "\n"; // Writing to File
+                }
+
+                // DOTD Section
+
+                if (!ui->dotdAddToCart->isChecked()) {
+                    QVariantMap tempDOTD = Database::getDOTD();
+                    out << tempDOTD["name"].toString() << " : Quantity 1" << "\n";
+                }
+
+                file.close();
+                qDebug() << "Order written to file successfully.";
+
+                orderDetails.clear(); // Clearing the order for the next one
+                updateDatabaseQuantities(); // Updating the available quantites for items in the cart
+                clearCards(); // Clearing cards to reload the cards with new updated quantities
+                loadCardsFromDatabase(); // Loading cards from the database (again)
+
+            } else {
+                qDebug() << "Error opening order.txt for writing!";
+            }
         }
 
         // Add Animation
@@ -366,6 +389,8 @@ void UserInterface::checkoutFunction()
         qDebug() << "No Option selected.";
         QMessageBox::critical(this, "Error", "Select an option (Dining/Takeaway)");
     }
+
+    qDebug();
 }
 
 void UserInterface::openLicenseFunction()
@@ -409,7 +434,7 @@ void UserInterface::loadCardsFromDatabase()
                   "available_qty FROM items");
 
     if (!query.exec()) {
-        qDebug() << "Query failed:" << query.lastError().text();
+        qDebug() << "Item Query failed:" << query.lastError().text();
         return;
     }
 
@@ -426,18 +451,12 @@ void UserInterface::loadCardsFromDatabase()
         // Create a new card widget
         CardWidget *card = new CardWidget(id, name, isVeg, indicator1, indicator2, indicator3, price, availableQty, this);
 
-        // Connect signals
         connect(card, &CardWidget::quantityChanged, this, &UserInterface::onCardQuantityChanged);
         connect(card, &CardWidget::addToCart, this, &UserInterface::onAddToCart);
 
-        // Add the card to the layout
         cardsLayout->addWidget(card);
-
-        // Add spacing between cards
-        addHorizontalDivider();
-
-        // Store the card in the map
-        cardWidgets[id] = card;
+        addHorizontalDivider(); // Add spacing between cards
+        cardWidgets[id] = card; // Store the card in the map
     }
 
     cardsLayout->addStretch();
@@ -474,6 +493,71 @@ void UserInterface::updateTotalCostLabel()
             "QLabel { color: #FFFFFF; font-weight: bold; padding: 5px; }");
     });
 }
+
+void UserInterface::clearCards()
+{
+    for (auto card : cardWidgets.values()) {
+        cardsLayout->removeWidget(card);
+        delete card;
+    }
+
+    cardWidgets.clear();
+
+    QLayoutItem *child;
+    while ((child = cardsLayout->takeAt(0)) != nullptr) {
+        delete child;  // Delete the layout item (spacers, etc.)
+    }
+
+    totalCost = 0.0;
+    updateTotalCostLabel();
+}
+
+
+void UserInterface::updateDatabaseQuantities()
+{
+    QSqlDatabase::database().transaction();
+
+    // For each card with non-zero quantity, update the database
+    for (auto card : cardWidgets.values()) {
+        int id = card->getId();
+        int quantity = card->getQuantity();
+
+        if (quantity > 0) {
+            // First get current available quantity from database
+            QSqlQuery selectQuery;
+            selectQuery.prepare("SELECT available_qty FROM items WHERE id = ?");
+            selectQuery.bindValue(0, id);
+
+            if (selectQuery.exec() && selectQuery.next()) {
+                int currentAvailableQty = selectQuery.value(0).toInt();
+                int newAvailableQty = currentAvailableQty - quantity;
+
+                // Make sure we don't go below zero
+                newAvailableQty = qMax(0, newAvailableQty);
+
+                // Update the database
+                QSqlQuery updateQuery;
+                updateQuery.prepare("UPDATE items SET available_qty = ? WHERE id = ?");
+                updateQuery.bindValue(0, newAvailableQty);
+                updateQuery.bindValue(1, id);
+
+                if (!updateQuery.exec()) {
+                    qDebug() << "Error updating quantity for item" << id << ":" << updateQuery.lastError().text();
+                    QSqlDatabase::database().rollback();
+                    return;
+                }
+            } else {
+                qDebug() << "Error fetching current quantity for item" << id << ":" << selectQuery.lastError().text();
+                QSqlDatabase::database().rollback();
+                return;
+            }
+        }
+    }
+
+    QSqlDatabase::database().commit();
+    qDebug() << "Available quantities updated for items";
+}
+
 
 // Dish Of The Day
 void UserInterface::dotdAddToCartFunction()

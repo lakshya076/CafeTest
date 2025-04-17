@@ -55,6 +55,9 @@ private:
     QVariantMap dotd;
     QMap<int, int> orderDetails;
 
+    void clearCards();
+    void updateDatabaseQuantities();
+
     void loadCardsFromDatabase();
     void updateTotalCostLabel();
 
