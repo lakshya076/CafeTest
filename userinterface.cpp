@@ -448,6 +448,10 @@ void UserInterface::loadCardsFromDatabase()
         double price = query.value(6).toDouble();
         int availableQty = query.value(7).toInt();
 
+        if (availableQty == 0) {
+            continue;
+        }
+
         // Create a new card widget
         CardWidget *card = new CardWidget(id, name, isVeg, indicator1, indicator2, indicator3, price, availableQty, this);
 
