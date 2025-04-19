@@ -1,4 +1,4 @@
-#include "startup.h"
+ #include "startup.h"
 #include "clickablelabel.h"
 #include "database.h"
 #include "ui_startup.h"

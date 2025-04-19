@@ -335,6 +335,10 @@ void UserInterface::checkoutFunction()
             }
         }
 
+        if (!ui->dotdAddToCart->isChecked()) {
+            hasItems = true;
+        }
+
         if (!hasItems) {
             qDebug() << "No items in the cart";
             return;
@@ -371,6 +375,8 @@ void UserInterface::checkoutFunction()
 
                 file.close();
                 qDebug() << "Order written to file successfully.";
+
+                QMessageBox::information(this, "Info", "Order placed succesfully.");
 
                 orderDetails.clear(); // Clearing the order for the next one
                 updateDatabaseQuantities(); // Updating the available quantites for items in the cart
@@ -649,6 +655,8 @@ void UserInterface::submitFeedbackFunction()
 
         file.close();
         qDebug() << "Feedback written to file successfully.";
+
+        QMessageBox::information(this, "Info", "Feedback has been submitted successfully");
     } else {
         qDebug() << "Error opening feedback.txt for writing!";
     }

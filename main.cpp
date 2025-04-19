@@ -15,6 +15,16 @@ int main(int argc, char *argv[])
     // Sample id pass
     // 992401030010 , 12qw12qw
 
+    QRect screenGeometry = QGuiApplication::primaryScreen()->availableGeometry();
+
+    // Set size relative to the screen
+    int width = screenGeometry.width() * 0.9;
+    int height = screenGeometry.height() * 0.9;
+
+    // Center the window
+    int x = screenGeometry.x() + (screenGeometry.width() - width) / 2;
+    int y = screenGeometry.y() + (screenGeometry.height() - height) / 2;
+
     // Connection to Database and pre-checks
     QString appDir = QCoreApplication::applicationDirPath();
 
@@ -38,15 +48,18 @@ int main(int argc, char *argv[])
                      << user["batch"] << user["logged_in"];
 
             UserInterface mainWindow;
-
+            mainWindow.setGeometry(x, y, width, height);
             mainWindow.show();
+
             return app.exec();
         } else {
             Startup startupDialog;
             int startupResult = startupDialog.exec();
             if (startupResult == 1) { // User Registered or Logged In
                 UserInterface mainWindow;
+                mainWindow.setGeometry(x, y, width, height);
                 mainWindow.show();
+
                 return app.exec();
             } else {
                 return 0;
@@ -54,7 +67,9 @@ int main(int argc, char *argv[])
         }
     } else if (result == 2) {
         CafeInterface cafe;
+        cafe.setGeometry(x, y, width, height);
         cafe.show();
+
         return app.exec();
     }
     return 1;
