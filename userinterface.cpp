@@ -378,7 +378,6 @@ void UserInterface::checkoutFunction()
 
                 QMessageBox::information(this, "Info", "Order placed succesfully.");
 
-                orderDetails.clear(); // Clearing the order for the next one
                 updateDatabaseQuantities(); // Updating the available quantites for items in the cart
                 clearCards(); // Clearing cards to reload the cards with new updated quantities
                 loadCardsFromDatabase(); // Loading cards from the database (again)
@@ -401,6 +400,7 @@ void UserInterface::checkoutFunction()
         QMessageBox::critical(this, "Error", "Select an option (Dining/Takeaway)");
     }
 
+    orderDetails.clear(); // Clearing the order for the next one
     qDebug();
 }
 
@@ -478,8 +478,8 @@ void UserInterface::loadCardsFromDatabase()
                                           availableQty,
                                           this);
 
-        connect(card, &CardWidget::quantityChanged, this, &UserInterface::onCardQuantityChanged);
         connect(card, &CardWidget::addToCart, this, &UserInterface::onAddToCart);
+        connect(card, &CardWidget::quantityChanged, this, &UserInterface::onCardQuantityChanged);
 
         cardsLayout->addWidget(card);
         addHorizontalDivider(); // Add spacing between cards
@@ -494,7 +494,7 @@ void UserInterface::onCardQuantityChanged(int id, int delta, double price)
     // Update the total cost
     totalCost += delta * price;
     updateTotalCostLabel();
-    orderDetails[id] += 1;
+    orderDetails[id] += delta;
     qDebug() << "Quantity for" << id << ":" << orderDetails[id];
 }
 
