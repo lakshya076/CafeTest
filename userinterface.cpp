@@ -62,7 +62,7 @@ QString main_css = R"(
             margin: 0px;
         })";
 
-QString ui_button_css = R"(
+QString rippleButtonCSS = R"(
     RippleButton {
         background-color: #3FA7D6;
         color: #FFFAF0;
@@ -113,11 +113,10 @@ QString feedbackStyleSheet = R"(
     }
 )";
 
-QString dotdAddToCartCss = R"(
+QString uiButtonCSS = R"(
     QPushButton {
         background-color: #3FA7D6;
         color: #FFFAF0;
-        font-weight: bold;
         border-radius: 6px;
         padding: 8px 20px;
         border: none;
@@ -171,8 +170,11 @@ UserInterface::UserInterface(QWidget *parent)
     ui->expand->hide();
     ui->home_collapse->setChecked(true);
     ui->stack->setCurrentIndex(0);
-    ui->checkout->setStyleSheet(ui_button_css);
-    ui->submitFeedbackButton->setStyleSheet(ui_button_css);
+    ui->checkout->setStyleSheet(rippleButtonCSS);
+    ui->submitFeedbackButton->setStyleSheet(rippleButtonCSS);
+    ui->logout_settings->setStyleSheet(uiButtonCSS);
+    ui->license_button->setStyleSheet(uiButtonCSS);
+    ui->dotdAddToCart->setStyleSheet(uiButtonCSS);
     ui->feedback_page->setStyleSheet(feedbackStyleSheet);
 
     // Connecting buttons with function calls
@@ -194,21 +196,12 @@ UserInterface::UserInterface(QWidget *parent)
     connect(ui->exit_collapse, &QPushButton::clicked, this, &UserInterface::exitFunction);
     connect(ui->exit_expand, &QPushButton::clicked, this, &UserInterface::exitFunction);
 
-    connect(ui->license_cred_collapse,
-            &QPushButton::clicked,
-            this,
-            &UserInterface::creditLicenseFunction);
-    connect(ui->license_cred_expand,
-            &QPushButton::clicked,
-            this,
-            &UserInterface::creditLicenseFunction);
+    connect(ui->license_cred_collapse, &QPushButton::clicked, this, &UserInterface::creditLicenseFunction);
+    connect(ui->license_cred_expand, &QPushButton::clicked, this, &UserInterface::creditLicenseFunction);
 
     connect(ui->checkout, &RippleButton::clicked, this, &UserInterface::checkoutFunction);
 
-    connect(ui->submitFeedbackButton,
-            &QPushButton::clicked,
-            this,
-            &UserInterface::submitFeedbackFunction);
+    connect(ui->submitFeedbackButton, &QPushButton::clicked, this, &UserInterface::submitFeedbackFunction);
 
     // Dish of The Day section
     dotd = Database::getDOTD();
@@ -232,8 +225,6 @@ UserInterface::UserInterface(QWidget *parent)
     QString price = "Rs " + dotd["price"].toString();
     ui->dotdPrice->setText(price);
 
-    ui->dotdAddToCart->setStyleSheet(dotdAddToCartCss);
-
     connect(ui->dotdAddToCart, &QPushButton::clicked, this, &UserInterface::dotdAddToCartFunction);
 
     // Feedback Page
@@ -253,6 +244,13 @@ UserInterface::UserInterface(QWidget *parent)
     ui->feedbackDD2->addItem("8", 8);
     ui->feedbackDD2->addItem("9", 9);
     ui->feedbackDD2->addItem("10", 10);
+
+    // Settings Page
+    ui->uidSettings->setText(user["uid"].toString());
+    ui->nameSettings->setText(user["name"].toString());
+    ui->pnSettings->setText(user["phone"].toString());
+    ui->yearSettings->setText(user["year"].toString());
+    ui->batchSettings->setText(user["batch"].toString());
 }
 
 UserInterface::~UserInterface()
