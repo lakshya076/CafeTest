@@ -1,11 +1,11 @@
 #ifndef RIPPLEBUTTON_H
 #define RIPPLEBUTTON_H
 
+#include <QMouseEvent>
+#include <QPainter>
 #include <QPropertyAnimation>
 #include <QPushButton>
 #include <QTimer>
-#include <QMouseEvent>
-#include <QPainter>
 
 class RippleButton : public QPushButton
 {

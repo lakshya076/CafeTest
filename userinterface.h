@@ -11,9 +11,9 @@
 #include <QSpacerItem>
 #include <QStandardPaths>
 #include <QTimer>
+#include <QUuid>
 #include <QVBoxLayout>
 #include <QWidget>
-#include <QUuid>
 #include "cardwidget.h"
 
 namespace Ui {
@@ -56,6 +56,7 @@ private:
     QVariantMap dotd;
     QVariantMap user;
 
+    void remove(QLayout* layout);
     void clearCards();
     void updateDatabaseQuantities();
 

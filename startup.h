@@ -7,17 +7,15 @@
 #include <QDialog>
 #include <QFile>
 #include <QHBoxLayout>
+#include <QIntValidator>
 #include <QKeyEvent>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QStackedWidget>
 #include <QVBoxLayout>
 #include <QWidget>
-#include <QFile>
-#include <QIntValidator>
-#include <QLabel>
-#include <QMessageBox>
 
 namespace Ui {
 class Startup;

@@ -194,12 +194,21 @@ UserInterface::UserInterface(QWidget *parent)
     connect(ui->exit_collapse, &QPushButton::clicked, this, &UserInterface::exitFunction);
     connect(ui->exit_expand, &QPushButton::clicked, this, &UserInterface::exitFunction);
 
-    connect(ui->license_cred_collapse, &QPushButton::clicked, this, &UserInterface::creditLicenseFunction);
-    connect(ui->license_cred_expand, &QPushButton::clicked, this, &UserInterface::creditLicenseFunction);
+    connect(ui->license_cred_collapse,
+            &QPushButton::clicked,
+            this,
+            &UserInterface::creditLicenseFunction);
+    connect(ui->license_cred_expand,
+            &QPushButton::clicked,
+            this,
+            &UserInterface::creditLicenseFunction);
 
     connect(ui->checkout, &RippleButton::clicked, this, &UserInterface::checkoutFunction);
 
-    connect(ui->submitFeedbackButton, &QPushButton::clicked, this, &UserInterface::submitFeedbackFunction);
+    connect(ui->submitFeedbackButton,
+            &QPushButton::clicked,
+            this,
+            &UserInterface::submitFeedbackFunction);
 
     // Dish of The Day section
     dotd = Database::getDOTD();
@@ -274,7 +283,11 @@ void UserInterface::creditLicenseFunction()
 void UserInterface::logoutFunction()
 {
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Logout", "Are you sure you want to logout?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    reply = QMessageBox::question(this,
+                                  "Logout",
+                                  "Are you sure you want to logout?",
+                                  QMessageBox::Yes | QMessageBox::No,
+                                  QMessageBox::No);
 
     if (reply == QMessageBox::Yes) {
         if (Database::logout()) {
@@ -326,7 +339,8 @@ void UserInterface::checkoutFunction()
             qDebug() << "No items in the cart";
             return;
         } else {
-            qDebug() << "Order ID:" << orderID << "Option:" << ui->optionDD->currentText() << "Price:" << price;
+            qDebug() << "Order ID:" << orderID << "Option:" << ui->optionDD->currentText()
+                     << "Price:" << price;
             qDebug() << "Order Details:";
 
             // Write to File
@@ -335,7 +349,8 @@ void UserInterface::checkoutFunction()
             if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
                 QTextStream out(&file);
 
-                out << "User Details: " << user["uid"].toString() << ", " << user["name"].toString() << "\n\n";
+                out << "User Details: " << user["uid"].toString() << ", " << user["name"].toString()
+                    << "\n\n";
                 out << "Order ID: " << orderID << "\n";
                 out << "Option: " << ui->optionDD->currentText() << "\n";
                 out << "Price: Rs " << price << "\n\n";
@@ -345,7 +360,8 @@ void UserInterface::checkoutFunction()
                     QVariantMap tempData = Database::getItem(it.key());
                     qDebug() << tempData["name"].toString() << ": Quantity" << it.value();
 
-                    out << tempData["name"].toString() << " : Quantity " << it.value() << "\n"; // Writing to File
+                    out << tempData["name"].toString() << " : Quantity " << it.value()
+                        << "\n"; // Writing to File
                 }
 
                 // DOTD Section
@@ -382,12 +398,15 @@ void UserInterface::checkoutFunction()
     qDebug();
 }
 
-// Throws error
 void UserInterface::openLicenseFunction()
 {
     QString resourcePath = ":/license.txt";
+
     QString targetDir = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
+    QDir().mkpath(targetDir);
+
     QString targetPath = QDir(targetDir).filePath("license.txt");
+    QFile::remove(targetPath);
 
     // Copy from resources to disk
     if (!QFile::copy(resourcePath, targetPath)) {
@@ -400,7 +419,6 @@ void UserInterface::openLicenseFunction()
     // Launch in Notepad
     QProcess::startDetached("notepad.exe", QStringList() << targetPath);
 }
-
 
 // Card Events
 void UserInterface::addHorizontalDivider()
@@ -444,7 +462,15 @@ void UserInterface::loadCardsFromDatabase()
         }
 
         // Create a new card widget
-        CardWidget *card = new CardWidget(id, name, isVeg, indicator1, indicator2, indicator3, price, availableQty, this);
+        CardWidget *card = new CardWidget(id,
+                                          name,
+                                          isVeg,
+                                          indicator1,
+                                          indicator2,
+                                          indicator3,
+                                          price,
+                                          availableQty,
+                                          this);
 
         connect(card, &CardWidget::quantityChanged, this, &UserInterface::onCardQuantityChanged);
         connect(card, &CardWidget::addToCart, this, &UserInterface::onAddToCart);
@@ -479,11 +505,13 @@ void UserInterface::onAddToCart(int id)
 void UserInterface::updateTotalCostLabel()
 {
     ui->totalCostLabel->setText(QString("Total Cost: Rs %1").arg(totalCost, 0, 'f', 2));
-    ui->totalCostLabel->setStyleSheet("QLabel { color: #50E3C2; font-weight: bold; padding: 5px; }");
+    ui->totalCostLabel->setStyleSheet(
+        "QLabel { color: #50E3C2; font-weight: bold; padding: 5px; }");
 
     // Return to normal style after a short delay
     QTimer::singleShot(500, [this]() {
-        ui->totalCostLabel->setStyleSheet("QLabel { color: #FFFFFF; font-weight: bold; padding: 5px; }");
+        ui->totalCostLabel->setStyleSheet(
+            "QLabel { color: #FFFFFF; font-weight: bold; padding: 5px; }");
     });
 }
 
@@ -497,15 +525,12 @@ void UserInterface::clearCards()
 
     cardWidgets.clear();
 
-    QLayoutItem *child;
-    while ((child = cardsLayout->takeAt(0)) != nullptr) {
-        delete child;  // Delete the layout item (spacers, etc.)
-    }
+    // Function to remove children in cardsLayout
+    remove(cardsLayout);
 
     totalCost = 0.0;
     updateTotalCostLabel();
 }
-
 
 void UserInterface::updateDatabaseQuantities()
 {
@@ -536,12 +561,14 @@ void UserInterface::updateDatabaseQuantities()
                 updateQuery.bindValue(1, id);
 
                 if (!updateQuery.exec()) {
-                    qDebug() << "Error updating quantity for item" << id << ":" << updateQuery.lastError().text();
+                    qDebug() << "Error updating quantity for item" << id << ":"
+                             << updateQuery.lastError().text();
                     QSqlDatabase::database().rollback();
                     return;
                 }
             } else {
-                qDebug() << "Error fetching current quantity for item" << id << ":" << selectQuery.lastError().text();
+                qDebug() << "Error fetching current quantity for item" << id << ":"
+                         << selectQuery.lastError().text();
                 QSqlDatabase::database().rollback();
                 return;
             }
@@ -552,7 +579,6 @@ void UserInterface::updateDatabaseQuantities()
     qDebug() << "Available quantities updated for items";
     qDebug();
 }
-
 
 // Dish Of The Day
 void UserInterface::dotdAddToCartFunction()
@@ -625,5 +651,24 @@ void UserInterface::submitFeedbackFunction()
         qDebug() << "Feedback written to file successfully.";
     } else {
         qDebug() << "Error opening feedback.txt for writing!";
+    }
+}
+
+
+// Helper function to remove children from a qlayout
+void UserInterface::remove(QLayout* layout)
+{
+    QLayoutItem* child;
+    while(layout->count()!=0) {
+        child = layout->takeAt(0);
+
+        if(child->layout() != 0) {
+            remove(child->layout());
+        }
+        else if(child->widget() != 0) {
+            delete child->widget();
+        }
+
+        delete child;
     }
 }

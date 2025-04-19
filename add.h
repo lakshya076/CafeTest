@@ -3,9 +3,9 @@
 #define ADD_H
 
 #include <QDialog>
-#include <QKeyEvent>
 #include <QDoubleValidator>
 #include <QIntValidator>
+#include <QKeyEvent>
 #include <QMessageBox>
 
 namespace Ui {

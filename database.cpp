@@ -83,7 +83,6 @@ bool Database::insertUser(const QString &uid,
 
 QVariantMap Database::getUserData(const QString &uid, const QString &password)
 {
-
     QSqlQuery query;
     query.prepare("SELECT uid, password, email, logged_in FROM users WHERE uid = :uid AND password "
                   "= :password");
@@ -271,7 +270,7 @@ QVariantMap Database::getItem(const int &id)
         if (query.next()) {
             itemData["name"] = query.value("name").toString();
             itemData["available_qty"] = query.value("available_qty").toInt();
-         } else {
+        } else {
             qDebug() << "No item found with uid: " << id;
         }
     } else {
@@ -280,7 +279,6 @@ QVariantMap Database::getItem(const int &id)
 
     return itemData;
 }
-
 
 // Cafe Interface Functions
 void Database::addItem(const QString &name,

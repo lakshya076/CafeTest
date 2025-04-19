@@ -3,7 +3,6 @@
 #include "database.h"
 #include "ui_add.h"
 
-
 QString addError_css = "border: 2px solid #D9534F; font:12pt; border-radius:10px; padding:2 10px;";
 QString textBoxStyleSheet = R"(
     QLineEdit {

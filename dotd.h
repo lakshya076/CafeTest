@@ -1,11 +1,11 @@
 #ifndef DOTD_H
 #define DOTD_H
 
-#include <QDialog>
-#include <QKeyEvent>
 #include <QDate>
+#include <QDialog>
 #include <QDoubleValidator>
 #include <QIntValidator>
+#include <QKeyEvent>
 #include <QMessageBox>
 
 namespace Ui {
