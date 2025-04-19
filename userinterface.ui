@@ -99,7 +99,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="resource_icon.qrc">
+          <iconset resource="Resources.qrc">
            <normaloff>:/icons/Icons/menu.ico</normaloff>:/icons/Icons/menu.ico</iconset>
          </property>
          <property name="iconSize">
@@ -143,7 +143,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="resource_icon.qrc">
+          <iconset resource="Resources.qrc">
            <normaloff>:/icons/Icons/home_unchecked.ico</normaloff>
            <normalon>:/icons/Icons/home_checked.ico</normalon>:/icons/Icons/home_unchecked.ico</iconset>
          </property>
@@ -188,7 +188,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="resource_icon.qrc">
+          <iconset resource="Resources.qrc">
            <normaloff>:/icons/Icons/feedback.ico</normaloff>:/icons/Icons/feedback.ico</iconset>
          </property>
          <property name="iconSize">
@@ -245,7 +245,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="resource_icon.qrc">
+          <iconset resource="Resources.qrc">
            <normaloff>:/icons/Icons/license.png</normaloff>:/icons/Icons/license.png</iconset>
          </property>
          <property name="iconSize">
@@ -289,7 +289,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="resource_icon.qrc">
+          <iconset resource="Resources.qrc">
            <normaloff>:/icons/Icons/settings_unchecked.ico</normaloff>
            <normalon>:/icons/Icons/settings_checked.ico</normalon>:/icons/Icons/settings_unchecked.ico</iconset>
          </property>
@@ -334,7 +334,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="resource_icon.qrc">
+          <iconset resource="Resources.qrc">
            <normaloff>:/icons/Icons/logout.ico</normaloff>:/icons/Icons/logout.ico</iconset>
          </property>
          <property name="iconSize">
@@ -378,7 +378,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="resource_icon.qrc">
+          <iconset resource="Resources.qrc">
            <normaloff>:/icons/Icons/exit_main.ico</normaloff>:/icons/Icons/exit_main.ico</iconset>
          </property>
          <property name="iconSize">
@@ -434,7 +434,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="resource_icon.qrc">
+          <iconset resource="Resources.qrc">
            <normaloff>:/icons/Icons/menu.ico</normaloff>:/icons/Icons/menu.ico</iconset>
          </property>
          <property name="iconSize">
@@ -478,7 +478,7 @@
           <string>Home</string>
          </property>
          <property name="icon">
-          <iconset resource="resource_icon.qrc">
+          <iconset resource="Resources.qrc">
            <normaloff>:/icons/Icons/home_unchecked.ico</normaloff>
            <normalon>:/icons/Icons/home_checked.ico</normalon>:/icons/Icons/home_unchecked.ico</iconset>
          </property>
@@ -523,7 +523,7 @@
           <string>Feedback</string>
          </property>
          <property name="icon">
-          <iconset resource="resource_icon.qrc">
+          <iconset resource="Resources.qrc">
            <normaloff>:/icons/Icons/feedback.ico</normaloff>:/icons/Icons/feedback.ico</iconset>
          </property>
          <property name="iconSize">
@@ -580,7 +580,7 @@
           <string>Credits/License</string>
          </property>
          <property name="icon">
-          <iconset resource="resource_icon.qrc">
+          <iconset resource="Resources.qrc">
            <normaloff>:/icons/Icons/license.png</normaloff>:/icons/Icons/license.png</iconset>
          </property>
          <property name="iconSize">
@@ -624,7 +624,7 @@
           <string>Settings</string>
          </property>
          <property name="icon">
-          <iconset resource="resource_icon.qrc">
+          <iconset resource="Resources.qrc">
            <normaloff>:/icons/Icons/settings_unchecked.ico</normaloff>
            <normalon>:/icons/Icons/settings_checked.ico</normalon>:/icons/Icons/settings_unchecked.ico</iconset>
          </property>
@@ -669,7 +669,7 @@
           <string>Logout</string>
          </property>
          <property name="icon">
-          <iconset resource="resource_icon.qrc">
+          <iconset resource="Resources.qrc">
            <normaloff>:/icons/Icons/logout.ico</normaloff>:/icons/Icons/logout.ico</iconset>
          </property>
          <property name="iconSize">
@@ -713,7 +713,7 @@
           <string>Exit</string>
          </property>
          <property name="icon">
-          <iconset resource="resource_icon.qrc">
+          <iconset resource="Resources.qrc">
            <normaloff>:/icons/Icons/exit_main.ico</normaloff>:/icons/Icons/exit_main.ico</iconset>
          </property>
          <property name="iconSize">
@@ -791,8 +791,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>98</width>
-                 <height>28</height>
+                 <width>622</width>
+                 <height>604</height>
                 </rect>
                </property>
               </widget>
@@ -832,6 +832,7 @@
                    <property name="font">
                     <font>
                      <pointsize>22</pointsize>
+                     <bold>true</bold>
                     </font>
                    </property>
                    <property name="text">
@@ -2599,7 +2600,7 @@ border-radius: 10px;
   <tabstop>exit_expand</tabstop>
  </tabstops>
  <resources>
-  <include location="resource_icon.qrc"/>
+  <include location="Resources.qrc"/>
  </resources>
  <connections>
   <connection>
