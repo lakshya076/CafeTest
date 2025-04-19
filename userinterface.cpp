@@ -203,6 +203,8 @@ UserInterface::UserInterface(QWidget *parent)
 
     connect(ui->submitFeedbackButton, &QPushButton::clicked, this, &UserInterface::submitFeedbackFunction);
 
+    connect(ui->delete_acc, &QPushButton::clicked, this, &UserInterface::deleteAccountFunction);
+
     // Dish of The Day section
     dotd = Database::getDOTD();
     qDebug();
@@ -422,6 +424,26 @@ void UserInterface::openLicenseFunction()
 
     // Launch in Notepad
     QProcess::startDetached("notepad.exe", QStringList() << targetPath);
+}
+
+void UserInterface::deleteAccountFunction() {
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this,
+                                  "Delete Account",
+                                  "Are you sure you want to delete your account?",
+                                  QMessageBox::Yes | QMessageBox::No,
+                                  QMessageBox::No);
+
+    if (reply == QMessageBox::Yes) {
+        if (!Database::deleteUser(user["uid"].toString())) {
+            QMessageBox::critical(this, "Error", "Your account could not be deleted. Try Again later");
+        } else {
+            QMessageBox::information(this, "Info", "Your account has been deleted successfully.\nCafe++ will now close");
+            close();
+        }
+    } else {
+        qDebug() << "Account will not be deleted";
+    }
 }
 
 // Card Events

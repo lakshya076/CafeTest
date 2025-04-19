@@ -40,6 +40,8 @@ public:
     static void setUserLoggedIn(const QString &uid);
     static bool checkLogged();
 
+    static bool deleteUser(const QString &uid);
+
     static QVariantMap getItem(const int &id);
 
     //Cafe Interface Functions

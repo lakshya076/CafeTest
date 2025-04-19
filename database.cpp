@@ -258,6 +258,18 @@ bool Database::checkLogged()
     return false;
 }
 
+bool Database::deleteUser(const QString& uid) {
+    QSqlQuery query;
+    query.prepare("DELETE FROM users WHERE uid = :uid");
+    query.bindValue(":uid", uid);
+
+    if (!query.exec()) {
+        qDebug() << "Error deleting user:" << query.lastError().text();
+        return false;
+    }
+    return true;
+}
+
 QVariantMap Database::getItem(const int &id)
 {
     QSqlQuery query;

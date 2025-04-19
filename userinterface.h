@@ -41,6 +41,7 @@ private slots:
     void checkoutFunction();
     void dotdAddToCartFunction();
     void submitFeedbackFunction();
+    void deleteAccountFunction();
 
     // Card functions
     void onCardQuantityChanged(int id, int delta, double price);
