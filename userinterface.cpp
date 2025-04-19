@@ -328,7 +328,7 @@ void UserInterface::checkoutFunction()
     if (ui->optionDD->currentIndex() != -1) {
         // Check if there are any items in the cart
         bool hasItems = false;
-        for (auto card : cardWidgets.values()) {
+        for (auto &card : cardWidgets) {
             if (card->getQuantity() > 0) {
                 hasItems = true;
                 break;
@@ -515,7 +515,7 @@ void UserInterface::updateTotalCostLabel()
         "QLabel { color: #50E3C2; font-weight: bold; padding: 5px; }");
 
     // Return to normal style after a short delay
-    QTimer::singleShot(500, [this]() {
+    QTimer::singleShot(500, this, [this]() {
         ui->totalCostLabel->setStyleSheet(
             "QLabel { color: #FFFFFF; font-weight: bold; padding: 5px; }");
     });
@@ -524,7 +524,7 @@ void UserInterface::updateTotalCostLabel()
 void UserInterface::clearCards()
 {
     // Function to clear cards in user interface from cardsScrollArea
-    for (auto card : cardWidgets.values()) {
+    for (auto &card : cardWidgets) {
         cardsLayout->removeWidget(card);
         delete card;
     }
@@ -543,7 +543,7 @@ void UserInterface::updateDatabaseQuantities()
     // Function to update available quantities of the items in the order in the database
     QSqlDatabase::database().transaction();
 
-    for (auto card : cardWidgets.values()) {
+    for (auto &card : cardWidgets) {
         int id = card->getId();
         int quantity = card->getQuantity();
 

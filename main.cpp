@@ -67,7 +67,6 @@ int main(int argc, char *argv[])
         }
     } else if (result == 2) {
         CafeInterface cafe;
-        cafe.setGeometry(x, y, width, height);
         cafe.show();
 
         return app.exec();
