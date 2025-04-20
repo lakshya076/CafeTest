@@ -3,6 +3,9 @@
     <file>license.txt</file>
   </qresource>
   <qresource prefix="/icons">
+    <file>Icons/license_checked.png</file>
+    <file>Icons/feedback.png</file>
+    <file>Icons/feedback_checked.png</file>
     <file>Icons/history.png</file>
     <file>Icons/history_checked.png</file>
     <file>Icons/backward.ico</file>
@@ -20,6 +23,5 @@
     <file>Icons/addcart.ico</file>
     <file>Icons/nonveg.png</file>
     <file>Icons/veg.png</file>
-    <file>Icons/feedback.ico</file>
   </qresource>
 </RCC>

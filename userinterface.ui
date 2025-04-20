@@ -174,7 +174,8 @@
          </property>
          <property name="icon">
           <iconset resource="Resources.qrc">
-           <normaloff>:/icons/Icons/feedback.ico</normaloff>:/icons/Icons/feedback.ico</iconset>
+           <normaloff>:/icons/Icons/feedback.png</normaloff>
+           <normalon>:/icons/Icons/feedback_checked.png</normalon>:/icons/Icons/feedback.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -269,14 +270,15 @@
           <enum>Qt::FocusPolicy::NoFocus</enum>
          </property>
          <property name="toolTip">
-          <string>Change Theme</string>
+          <string>Open Library</string>
          </property>
          <property name="text">
           <string/>
          </property>
          <property name="icon">
           <iconset resource="Resources.qrc">
-           <normaloff>:/icons/Icons/license.png</normaloff>:/icons/Icons/license.png</iconset>
+           <normaloff>:/icons/Icons/license.png</normaloff>
+           <normalon>:/icons/Icons/license_checked.png</normalon>:/icons/Icons/license.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -285,10 +287,10 @@
           </size>
          </property>
          <property name="checkable">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="autoExclusive">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -554,7 +556,8 @@
          </property>
          <property name="icon">
           <iconset resource="Resources.qrc">
-           <normaloff>:/icons/Icons/feedback.ico</normaloff>:/icons/Icons/feedback.ico</iconset>
+           <normaloff>:/icons/Icons/feedback.png</normaloff>
+           <normalon>:/icons/Icons/feedback_checked.png</normalon>:/icons/Icons/feedback.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -652,11 +655,12 @@
           <string/>
          </property>
          <property name="text">
-          <string>Credits/License</string>
+          <string>License/Credits</string>
          </property>
          <property name="icon">
           <iconset resource="Resources.qrc">
-           <normaloff>:/icons/Icons/license.png</normaloff>:/icons/Icons/license.png</iconset>
+           <normaloff>:/icons/Icons/license.png</normaloff>
+           <normalon>:/icons/Icons/license_checked.png</normalon>:/icons/Icons/license.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -665,7 +669,7 @@
           </size>
          </property>
          <property name="checkable">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="autoExclusive">
           <bool>true</bool>
@@ -844,7 +848,7 @@
          <string notr="true"/>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="home_page">
          <property name="styleSheet">
@@ -2075,11 +2079,11 @@ border-radius:10px;</string>
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>191</width>
-               <height>532</height>
+               <width>993</width>
+               <height>628</height>
               </rect>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_20">
+             <layout class="QVBoxLayout" name="verticalLayout_11">
               <item>
                <widget class="QLabel" name="label_4">
                 <property name="minimumSize">
@@ -2394,6 +2398,22 @@ border-radius:10px;</string>
                </widget>
               </item>
               <item>
+               <widget class="QLabel" name="label_38">
+                <property name="styleSheet">
+                 <string notr="true">font:12pt;</string>
+                </property>
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://icons8.com/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#05b8cc;&quot;&gt;Icons8&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="textFormat">
+                 <enum>Qt::TextFormat::MarkdownText</enum>
+                </property>
+                <property name="openExternalLinks">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
                <spacer name="verticalSpacer_6">
                 <property name="orientation">
                  <enum>Qt::Orientation::Vertical</enum>
@@ -2444,8 +2464,8 @@ border-radius:10px;</string>
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>98</width>
-                 <height>28</height>
+                 <width>66</width>
+                 <height>16</height>
                 </rect>
                </property>
               </widget>
@@ -2757,38 +2777,6 @@ border-radius: 10px;
    </hints>
   </connection>
   <connection>
-   <sender>license_cred_expand</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>license_cred_collapse</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>203</x>
-     <y>633</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>46</x>
-     <y>634</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>license_cred_collapse</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>license_cred_expand</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>52</x>
-     <y>634</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>224</x>
-     <y>633</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>history_collapse</sender>
    <signal>toggled(bool)</signal>
    <receiver>history_expand</receiver>
@@ -2817,6 +2805,38 @@ border-radius: 10px;
     <hint type="destinationlabel">
      <x>28</x>
      <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>license_cred_collapse</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>license_cred_expand</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>28</x>
+     <y>605</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>604</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>license_cred_expand</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>license_cred_collapse</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>157</x>
+     <y>604</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>28</x>
+     <y>605</y>
     </hint>
    </hints>
   </connection>
