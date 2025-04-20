@@ -337,6 +337,8 @@ void UserInterface::checkoutFunction()
 
         if (!ui->dotdAddToCart->isChecked()) {
             hasItems = true;
+            ui->dotdAddToCart->setChecked(true);
+            ui->dotdAddToCart->setText("Add To Cart");
         }
 
         if (!hasItems) {
