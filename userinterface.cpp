@@ -447,8 +447,12 @@ void UserInterface::openLicenseFunction()
 
     QFile::setPermissions(targetPath, QFile::ReadOwner | QFile::WriteOwner); // Allow overwriting
 
-    // Launch in Notepad
-    QProcess::startDetached("notepad.exe", QStringList() << targetPath);
+    // Open with notepad
+    #ifdef Q_OS_WIN
+        QProcess::startDetached("notepad.exe", QStringList() << targetPath);
+    #else
+        QProcess::startDetached("xdg-open", QStringList() << targetPath);
+    #endif
 }
 
 void UserInterface::deleteAccountFunction() {
