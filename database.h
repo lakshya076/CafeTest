@@ -14,6 +14,14 @@
 class Database
 {
 public:
+    struct OrderInfo {
+        int orderId;
+        QDateTime orderDate;
+        double totalAmount;
+        QMap<int, int> orderDetails; // dishID to quantity
+        QString uid;
+    };
+
     static bool setupDatabase(QString dbPath);
 
     // User table functions
@@ -43,6 +51,10 @@ public:
     static bool deleteUser(const QString &uid);
 
     static QVariantMap getItem(const int &id);
+
+    // Order History Functions
+    static bool insertOrder(const QString& uid, const QMap<int, int>& orderDetails, double totalAmount);
+    static QList<OrderInfo> getOrderHistory(const QString& uid);
 
     //Cafe Interface Functions
     static void addItem(const QString &name,

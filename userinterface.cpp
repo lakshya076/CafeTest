@@ -1,7 +1,7 @@
 #include "userinterface.h"
-#include "database.h"
 #include "ripplebutton.h"
 #include "ui_userinterface.h"
+#include "history.h"
 
 #include <regex>
 
@@ -147,10 +147,15 @@ UserInterface::UserInterface(QWidget *parent)
     // Get Current User Data
     user = Database::getUserData();
 
-    // Create a QVBoxLayout for the scroll area
-    cardsLayout = new QVBoxLayout(ui->scrollAreaWidgetContents);
+    // Create a QVBoxLayout for cardsScrollArea
+    cardsLayout = new QVBoxLayout(ui->cardsScrollAreaWidgetContents);
     cardsLayout->setSpacing(0);
     cardsLayout->setContentsMargins(10, 10, 10, 10);
+
+    // Create a QVBoxLayout for historyScrollArea
+    historyLayout = new QVBoxLayout(ui->historyScrollAreaWidgetContents);
+    historyLayout->setSpacing(0);
+    historyLayout->setContentsMargins(10, 10, 10, 10);
 
     // Initialize the total cost label
     updateTotalCostLabel();
@@ -161,6 +166,7 @@ UserInterface::UserInterface(QWidget *parent)
 
     // Loading all the cards from the database
     loadCardsFromDatabase();
+    loadOrderHistory();
 
     // Setting up Drop Down
     ui->optionDD->addItem("Dining");
@@ -198,6 +204,9 @@ UserInterface::UserInterface(QWidget *parent)
 
     connect(ui->license_cred_collapse, &QPushButton::clicked, this, &UserInterface::creditLicenseFunction);
     connect(ui->license_cred_expand, &QPushButton::clicked, this, &UserInterface::creditLicenseFunction);
+
+    connect(ui->history_collapse, &QPushButton::clicked, this, &UserInterface::historyFunction);
+    connect(ui->history_expand, &QPushButton::clicked, this, &UserInterface::historyFunction);
 
     connect(ui->checkout, &RippleButton::clicked, this, &UserInterface::checkoutFunction);
 
@@ -280,6 +289,10 @@ void UserInterface::creditLicenseFunction()
     ui->stack->setCurrentIndex(3);
 }
 
+void UserInterface::historyFunction() {
+    ui->stack->setCurrentIndex(4);
+}
+
 void UserInterface::logoutFunction()
 {
     QMessageBox::StandardButton reply;
@@ -316,7 +329,6 @@ void UserInterface::checkoutFunction()
     std::regex numberRegex(R"([\d\.]+)");
     std::smatch match;
     double price;
-    QString orderID = QUuid::createUuid().toString(QUuid::WithoutBraces);
 
     // Checking if there is a number in totalCostLabel
     if (std::regex_search(priceStr, match, numberRegex)) {
@@ -345,7 +357,7 @@ void UserInterface::checkoutFunction()
             qDebug() << "No items in the cart";
             return;
         } else {
-            qDebug() << "Order ID:" << orderID << "Option:" << ui->optionDD->currentText()
+            qDebug() << "Option:" << ui->optionDD->currentText()
                      << "Price:" << price;
             qDebug() << "Order Details:";
 
@@ -357,7 +369,6 @@ void UserInterface::checkoutFunction()
 
                 out << "User Details: " << user["uid"].toString() << ", " << user["name"].toString()
                     << "\n\n";
-                out << "Order ID: " << orderID << "\n";
                 out << "Option: " << ui->optionDD->currentText() << "\n";
                 out << "Price: Rs " << price << "\n\n";
                 out << "Order Details: " << "\n";
@@ -378,10 +389,22 @@ void UserInterface::checkoutFunction()
                 file.close();
                 qDebug() << "Order written to file successfully.";
 
+                Database::insertOrder(user["uid"].toString(), orderDetails, totalCost);
+
+                if(ui->history_collapse->isHidden()) {
+                    ui->history_collapse->show();
+                    ui->history_expand->show();
+                }
+
                 QMessageBox::information(this, "Info", "Order placed succesfully.");
 
+                // Order History Page
+                clearCards(historyLayout);
+                loadOrderHistory();
+
+                // Home Page
                 updateDatabaseQuantities(); // Updating the available quantites for items in the cart
-                clearCards(); // Clearing cards to reload the cards with new updated quantities
+                clearCards(cardsLayout); // Clearing cards to reload the cards with new updated quantities
                 loadCardsFromDatabase(); // Loading cards from the database (again)
 
             } else {
@@ -448,8 +471,8 @@ void UserInterface::deleteAccountFunction() {
     }
 }
 
-// Card Events
-void UserInterface::addHorizontalDivider()
+// Card Events (Order History Cards and Dish Cards)
+void UserInterface::addHorizontalDivider(QLayout* layout)
 {
     QFrame *line = new QFrame();
     line->setFrameShape(QFrame::HLine);
@@ -459,7 +482,7 @@ void UserInterface::addHorizontalDivider()
 
     // Add vertical spacers before and after the line for padding
     addVerticalSpacer(5);
-    cardsLayout->addWidget(line);
+    layout->addWidget(line);
     addVerticalSpacer(5);
 }
 
@@ -504,7 +527,7 @@ void UserInterface::loadCardsFromDatabase()
         connect(card, &CardWidget::quantityChanged, this, &UserInterface::onCardQuantityChanged);
 
         cardsLayout->addWidget(card);
-        addHorizontalDivider(); // Add spacing between cards
+        addHorizontalDivider(cardsLayout); // Add spacing between cards
         cardWidgets[id] = card; // Store the card in the map
     }
 
@@ -543,18 +566,18 @@ void UserInterface::updateTotalCostLabel()
     });
 }
 
-void UserInterface::clearCards()
+void UserInterface::clearCards(QLayout* layout)
 {
     // Function to clear cards in user interface from cardsScrollArea
     for (auto &card : cardWidgets) {
-        cardsLayout->removeWidget(card);
+        layout->removeWidget(card);
         delete card;
     }
 
     cardWidgets.clear();
 
     // Function to remove children in cardsLayout
-    remove(cardsLayout);
+    remove(layout);
 
     totalCost = 0.0;
     updateTotalCostLabel();
@@ -607,6 +630,37 @@ void UserInterface::updateDatabaseQuantities()
     qDebug() << "Available quantities updated for items";
     qDebug();
 }
+
+void UserInterface::loadOrderHistory()
+{
+    orderHistory.clear(); // If Order history consists something beforehand
+    orderHistory = Database::getOrderHistory(user["uid"].toString());
+
+    if (orderHistory.isEmpty()) {
+        QLabel* noHistoryLabel = new QLabel("No order history found", this);
+        noHistoryLabel->setFont(QFont("Segoe UI", 16));
+        noHistoryLabel->setAlignment(Qt::AlignCenter);
+        historyLayout->addWidget(noHistoryLabel);
+    } else {
+        // Sort by most recent first (if not already sorted)
+        std::sort(orderHistory.begin(), orderHistory.end(),
+                  [](const Database::OrderInfo& a, const Database::OrderInfo& b) {
+                      return a.orderDate > b.orderDate;
+                  });
+
+        // Create a card for each order
+        for (int i = 0; i < orderHistory.size(); ++i) {
+            const Database::OrderInfo& order = orderHistory.at(i);
+            History* historyCard = new History(order, this);
+
+            historyLayout->addWidget(historyCard);
+            addHorizontalDivider(historyLayout);
+        }
+    }
+
+    historyLayout->addStretch();
+}
+
 
 // Dish Of The Day
 void UserInterface::dotdAddToCartFunction()

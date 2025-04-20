@@ -13,6 +13,7 @@ SOURCES += \
     customlineedit.cpp \
     database.cpp \
     dotd.cpp \
+    history.cpp \
     interfacechooser.cpp \
     main.cpp \
     ripplebutton.cpp \
@@ -29,6 +30,7 @@ HEADERS += \
     customlineedit.h \
     database.h \
     dotd.h \
+    history.h \
     interfacechooser.h \
     ripplebutton.h \
     startup.h \
@@ -48,7 +50,8 @@ FORMS += \
     startup.ui \
     update.ui \
     userinterface.ui \
-    dotd.ui
+    dotd.ui \
+    history.ui
 
 RESOURCES += Resources.qrc
 

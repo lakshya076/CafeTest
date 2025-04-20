@@ -1,5 +1,8 @@
 #include "database.h"
 
+#include <QJsonDocument>
+#include <QJsonObject>
+
 bool Database::setupDatabase(QString dbPath)
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
@@ -11,6 +14,11 @@ bool Database::setupDatabase(QString dbPath)
     }
 
     QSqlQuery query;
+
+    if (!query.exec("PRAGMA foreign_keys = ON")) {
+        qDebug() << "Failed to enable foreign keys:" << query.lastError().text();
+        return false;
+    }
 
     // Create tables if it doesn't exist
     if (!query.exec("CREATE TABLE IF NOT EXISTS users ("
@@ -48,6 +56,17 @@ bool Database::setupDatabase(QString dbPath)
                     "price REAL NOT NULL, "
                     "available_qty INTEGER NOT NULL)")) {
         qDebug() << "Error creating dotd table:" << query.lastError().text();
+        return false;
+    }
+
+    if (!query.exec("CREATE TABLE IF NOT EXISTS order_history ("
+                    "order_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    "uid TEXT NOT NULL, "
+                    "order_date TEXT DEFAULT (datetime('now','localtime')), "
+                    "total_amount REAL NOT NULL, "
+                    "orderDetails TEXT NOT NULL, "
+                    "FOREIGN KEY (uid) REFERENCES users(uid) ON DELETE CASCADE)")) {
+        qDebug() << "Error creating order history table:" << query.lastError().text();
         return false;
     }
 
@@ -290,6 +309,59 @@ QVariantMap Database::getItem(const int &id)
     }
 
     return itemData;
+}
+
+bool Database::insertOrder(const QString& uid, const QMap<int, int>& orderDetails, double totalAmount) {
+    QSqlQuery query;
+    query.prepare("INSERT INTO order_history (uid, total_amount, orderDetails) "
+                  "VALUES (:uid, :total_amount, :orderDetails)");
+
+    // Convert orderDetails map to JSON string
+    QJsonObject orderDetailsJson;
+    for (auto it = orderDetails.constBegin(); it != orderDetails.constEnd(); ++it) {
+        orderDetailsJson.insert(QString::number(it.key()), it.value());
+    }
+    QJsonDocument doc(orderDetailsJson);
+    QString orderDetailsStr = doc.toJson(QJsonDocument::Compact);
+
+    query.bindValue(":uid", uid);
+    query.bindValue(":total_amount", totalAmount);
+    query.bindValue(":orderDetails", orderDetailsStr);
+
+    return query.exec();
+}
+
+QList<Database::OrderInfo> Database::getOrderHistory(const QString& uid) {
+
+    QList<OrderInfo> orderHistory;
+    QSqlQuery query;
+    query.prepare("SELECT order_id, order_date, total_amount, orderDetails "
+                  "FROM order_history WHERE uid = :uid ORDER BY order_date DESC");
+    query.bindValue(":uid", uid);
+
+    if (query.exec()) {
+        while (query.next()) {
+            OrderInfo order;
+            order.orderId = query.value("order_id").toInt();
+            order.orderDate = QDateTime::fromString(query.value("order_date").toString(),
+                                                    "yyyy-MM-dd hh:mm:ss");
+            order.totalAmount = query.value("total_amount").toDouble();
+
+            // Parse orderDetails JSON back to QMap<int, int>
+            QString orderDetailsStr = query.value("orderDetails").toString();
+            QJsonDocument doc = QJsonDocument::fromJson(orderDetailsStr.toUtf8());
+            QJsonObject orderDetailsJson = doc.object();
+
+            for (auto it = orderDetailsJson.constBegin(); it != orderDetailsJson.constEnd(); ++it) {
+                // Convert string key back to int
+                order.orderDetails.insert(it.key().toInt(), it.value().toInt());
+            }
+
+            orderHistory.append(order);
+        }
+    }
+
+    return orderHistory;
 }
 
 // Cafe Interface Functions

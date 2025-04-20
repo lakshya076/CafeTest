@@ -15,6 +15,7 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include "cardwidget.h"
+#include "database.h"
 
 namespace Ui {
 class UserInterface;
@@ -28,7 +29,7 @@ public:
     explicit UserInterface(QWidget *parent = nullptr);
     ~UserInterface();
 
-    void addHorizontalDivider();
+    void addHorizontalDivider(QLayout* layout);
 
 private slots:
     void homeFunction();
@@ -38,6 +39,7 @@ private slots:
     void logoutFunction();
     void exitFunction();
     void creditLicenseFunction();
+    void historyFunction();
     void checkoutFunction();
     void dotdAddToCartFunction();
     void submitFeedbackFunction();
@@ -50,17 +52,20 @@ private slots:
 private:
     Ui::UserInterface *ui;
     QVBoxLayout *cardsLayout;
+    QVBoxLayout *historyLayout;
     QMap<int, CardWidget *> cardWidgets; // Map to store cards by ID
 
     double totalCost;
     QMap<int, int> orderDetails;
+    QList<Database::OrderInfo> orderHistory;
     QVariantMap dotd;
     QVariantMap user;
 
     void remove(QLayout* layout);
-    void clearCards();
+    void clearCards(QLayout* layout);
     void updateDatabaseQuantities();
 
+    void loadOrderHistory();
     void loadCardsFromDatabase();
     void updateTotalCostLabel();
 
