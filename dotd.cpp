@@ -99,7 +99,7 @@ Dotd::~Dotd()
 
 void Dotd::onDotdDDChanged()
 {
-    QVariantMap dotd = Database::getDOTD(ui->dotdDD->currentData().toInt());
+    QVariantMap dotd = Database::getDOTD(ui->dotdDD->currentData().toInt()+10000);
     qDebug() << dotd["name"] << dotd["is_vegetarian"] << dotd["indicator1"] << dotd["indicator2"]
              << dotd["indicator3"] << dotd["price"] << dotd["available_qty"];
 
@@ -123,7 +123,7 @@ void Dotd::updateDotdFunction()
             QMessageBox::warning(this, "Warning", "Updated Price cannot be zero");
         } else {
             qDebug() << "Only DOTD price will be updated";
-            Database::updateItem(id, dotdPriceNew, QString::fromStdString("dotd"));
+            Database::updateItem(id+10000, dotdPriceNew);
 
             QMessageBox::information(this, "Info", "Price updated successfully");
             ui->dotdNewPrice->clear();
@@ -133,7 +133,7 @@ void Dotd::updateDotdFunction()
             QMessageBox::warning(this, "Warning", "Updated Quantity cannot be zero");
         } else {
             qDebug() << "Only DOTD quantity will be updated";
-            Database::updateItem(id, dotdQtyNew, QString::fromStdString("dotd"));
+            Database::updateItem(id+10000, dotdQtyNew);
 
             QMessageBox::information(this, "Info", "Quantity updated successfully");
             ui->dotdNewQty->clear();
@@ -143,7 +143,7 @@ void Dotd::updateDotdFunction()
             QMessageBox::warning(this, "Warning", "Values cannot be zero");
         } else {
             qDebug() << "Both DOTD price and quantity will be updated";
-            Database::updateItem(id, dotdPriceNew, dotdQtyNew, QString::fromStdString("dotd"));
+            Database::updateItem(id+10000, dotdPriceNew, dotdQtyNew);
 
             QMessageBox::information(this, "Info", "Price and Quantity updated successfully");
             ui->dotdNewPrice->clear();

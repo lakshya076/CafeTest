@@ -58,6 +58,7 @@ bool Database::setupDatabase(QString dbPath)
         qDebug() << "Error creating dotd table:" << query.lastError().text();
         return false;
     }
+    query.exec("DROP TABLE dotd");
 
     if (!query.exec("CREATE TABLE IF NOT EXISTS order_history ("
                     "order_id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -424,15 +425,10 @@ void Database::deleteItem(int id, QComboBox *deleteDD)
     deleteDD->setCurrentIndex(-1);
 }
 
-void Database::updateItem(int id, double price, int qty, QString table)
+void Database::updateItem(int id, double price, int qty)
 {
     QSqlQuery query;
-
-    if (table.toStdString() == "items") {
-        query.prepare("UPDATE items SET price = :price, available_qty = :qty WHERE id = :id");
-    } else if (table.toStdString() == "dotd") {
-        query.prepare("UPDATE dotd SET price = :price, available_qty = :qty WHERE id = :id");
-    }
+    query.prepare("UPDATE items SET price = :price, available_qty = :qty WHERE id = :id");
     query.bindValue(":price", price);
     query.bindValue(":qty", qty);
     query.bindValue(":id", id);
@@ -444,15 +440,10 @@ void Database::updateItem(int id, double price, int qty, QString table)
     qDebug() << "Price and Quantity updated successfully.";
 }
 
-void Database::updateItem(int id, double price, QString table)
+void Database::updateItem(int id, double price)
 {
     QSqlQuery query;
-
-    if (table.toStdString() == "items") {
-        query.prepare("UPDATE items SET price = :price WHERE id = :id");
-    } else if (table.toStdString() == "dotd") {
-        query.prepare("UPDATE dotd SET price = :price WHERE id = :id");
-    }
+    query.prepare("UPDATE items SET price = :price WHERE id = :id");
     query.bindValue(":price", price);
     query.bindValue(":id", id);
 
@@ -463,15 +454,10 @@ void Database::updateItem(int id, double price, QString table)
     qDebug() << "Price updated successfully.";
 }
 
-void Database::updateItem(int id, int qty, QString table)
+void Database::updateItem(int id, int qty)
 {
     QSqlQuery query;
-
-    if (table.toStdString() == "items") {
-        query.prepare("UPDATE items SET available_qty = :qty WHERE id = :id");
-    } else if (table.toStdString() == "dotd") {
-        query.prepare("UPDATE dotd SET available_qty = :qty WHERE id = :id");
-    }
+    query.prepare("UPDATE items SET available_qty = :qty WHERE id = :id");
     query.bindValue(":qty", qty);
     query.bindValue(":id", id);
 
@@ -488,14 +474,15 @@ QVariantMap Database::getDOTD()
     int day = today.dayOfWeek();
 
     QSqlQuery query;
-    query.prepare("SELECT name, is_vegetarian, indicator1, indicator2, indicator3, price, "
-                  "available_qty FROM dotd WHERE :id = id");
-    query.bindValue(":id", day);
+    query.prepare("SELECT id, name, is_vegetarian, indicator1, indicator2, indicator3, price, "
+                  "available_qty FROM items WHERE id = :id");
+    query.bindValue(":id", day+10000);
 
     QVariantMap dotdData;
 
     if (query.exec()) {
         if (query.next()) {
+            dotdData["id"] = query.value("id").toInt();
             dotdData["name"] = query.value("name").toString();
             dotdData["is_vegetarian"] = query.value("is_vegetarian").toBool();
             dotdData["indicator1"] = query.value("indicator1").toString();
@@ -516,14 +503,15 @@ QVariantMap Database::getDOTD()
 QVariantMap Database::getDOTD(int id)
 {
     QSqlQuery query;
-    query.prepare("SELECT name, is_vegetarian, indicator1, indicator2, indicator3, price, "
-                  "available_qty FROM dotd WHERE :id = id");
+    query.prepare("SELECT id, name, is_vegetarian, indicator1, indicator2, indicator3, price, "
+                  "available_qty FROM items WHERE id = :id");
     query.bindValue(":id", id);
 
     QVariantMap dotdData;
 
     if (query.exec()) {
         if (query.next()) {
+            dotdData["id"] = query.value("id").toInt();
             dotdData["name"] = query.value("name").toString();
             dotdData["is_vegetarian"] = query.value("is_vegetarian").toBool();
             dotdData["indicator1"] = query.value("indicator1").toString();
@@ -539,4 +527,50 @@ QVariantMap Database::getDOTD(int id)
     }
 
     return dotdData;
+}
+
+bool Database::insertDotdItems()
+{
+    QSqlQuery query;
+    query.prepare("INSERT INTO items (id, name, is_vegetarian, indicator1, indicator2, indicator3, price, available_qty) "
+                  "VALUES (:id, :name, :is_vegetarian, :indicator1, :indicator2, :indicator3, :price, :available_qty)");
+
+    struct DotdItem {
+        int id;
+        QString name;
+        bool isVegetarian;
+        QString indicator1;
+        QString indicator2;
+        QString indicator3;
+        int price;
+        int availableQty;
+    };
+
+    QList<DotdItem> items = {
+        {10001, "Dosa Idli Sambhar Chutney", true,  "400kcal", "South Indian", "20-25Min", 150, 20},
+        {10002, "Chhole Bhature",            true,  "450kcal", "Fried",        "15-20Min", 80,  20},
+        {10003, "Dal Makhani & Naan",        true,  "350kcal", "Creamy",       "10-15Min", 80,  20},
+        {10004, "Pav Bhaji",                 true,  "390kcal", "Oily",         "10-15Min", 85,  20},
+        {10005, "Matar Kulcha",              true,  "598kcal", "Baked Kulcha", "10-15Min", 70,  20},
+        {10006, "Paneer Tikka Masala",       true,  "390kcal", "Tandoor",      "15-20min", 150, 20},
+        {10007, "Chicken Malai Tikka",       false, "497kcal", "Tandoor",      "20-25Min", 220, 20}
+    };
+
+    for (const auto& item : items) {
+        query.bindValue(":id", item.id);
+        query.bindValue(":name", item.name);
+        query.bindValue(":is_vegetarian", item.isVegetarian);
+        query.bindValue(":indicator1", item.indicator1);
+        query.bindValue(":indicator2", item.indicator2);
+        query.bindValue(":indicator3", item.indicator3);
+        query.bindValue(":price", item.price);
+        query.bindValue(":available_qty", item.availableQty);
+
+        if (!query.exec()) {
+            qDebug() << "Insert failed for ID" << item.id << ":" << query.lastError().text();
+            return false;
+        }
+    }
+
+    return true;
 }

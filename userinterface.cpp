@@ -146,6 +146,7 @@ UserInterface::UserInterface(QWidget *parent)
 
     // Get Current User Data
     user = Database::getUserData();
+    dotd = Database::getDOTD();
 
     // Create a QVBoxLayout for cardsScrollArea
     cardsLayout = new QVBoxLayout(ui->cardsScrollAreaWidgetContents);
@@ -215,7 +216,6 @@ UserInterface::UserInterface(QWidget *parent)
     connect(ui->delete_acc, &QPushButton::clicked, this, &UserInterface::deleteAccountFunction);
 
     // Dish of The Day section
-    dotd = Database::getDOTD();
     qDebug();
     qDebug() << "Dish Of the Day";
     qDebug() << dotd["name"] << dotd["is_vegetarian"] << dotd["indicator1"] << dotd["indicator2"]
@@ -340,6 +340,8 @@ void UserInterface::checkoutFunction()
     if (ui->optionDD->currentIndex() != -1) {
         // Check if there are any items in the cart
         bool hasItems = false;
+        bool isDotd = false;
+
         for (auto &card : cardWidgets) {
             if (card->getQuantity() > 0) {
                 hasItems = true;
@@ -349,12 +351,14 @@ void UserInterface::checkoutFunction()
 
         if (!ui->dotdAddToCart->isChecked()) {
             hasItems = true;
+            isDotd = true;
             ui->dotdAddToCart->setChecked(true);
             ui->dotdAddToCart->setText("Add To Cart");
         }
 
         if (!hasItems) {
             qDebug() << "No items in the cart";
+            QMessageBox::warning(this, "Error", "No items in the cart");
             return;
         } else {
             qDebug() << "Option:" << ui->optionDD->currentText()
@@ -382,19 +386,16 @@ void UserInterface::checkoutFunction()
                 }
 
                 // DOTD Section
-                if (!ui->dotdAddToCart->isChecked()) {
+                if (isDotd) {
                     out << dotd["name"].toString() << " : Quantity 1" << "\n";
+                    orderDetails[dotd["id"].toInt()] += 1;
+                    qDebug() << dotd["id"].toInt() << "jnhgvyctrd567r87tigubjk";
                 }
 
                 file.close();
                 qDebug() << "Order written to file successfully.";
 
                 Database::insertOrder(user["uid"].toString(), orderDetails, totalCost);
-
-                if(ui->history_collapse->isHidden()) {
-                    ui->history_collapse->show();
-                    ui->history_expand->show();
-                }
 
                 QMessageBox::information(this, "Info", "Order placed succesfully.");
 

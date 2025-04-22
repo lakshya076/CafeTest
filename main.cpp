@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
     qDebug() << "Trying to open DB at:" << fullPath;
 
     Database::setupDatabase(QDir::cleanPath(fullPath));
+
     InterfaceChooser interfaceDialog;
     int result = interfaceDialog.exec();
     if (result == 1) {

@@ -1,4 +1,5 @@
 #include "delete.h"
+#include <QMessageBox>
 #include <QString>
 #include "database.h"
 #include "ui_delete.h"
@@ -69,7 +70,11 @@ void Delete::deleteItemFunction()
 {
     int id = ui->deleteDD->currentData().toInt();
 
-    Database::deleteItem(id, ui->deleteDD);
+    if (ui->deleteDD->currentIndex() == -1) {
+        QMessageBox::critical(this, "Error", "Select an item");
+    } else {
+        Database::deleteItem(id, ui->deleteDD);
+    }
 }
 
 void Delete::keyPressEvent(QKeyEvent *event)

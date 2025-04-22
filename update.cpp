@@ -89,14 +89,16 @@ void Update::updateItemFunction()
     priceNew = ui->updateNewPrice->text().toDouble();
     qtyNew = ui->updateNewQty->text().toInt();
 
-    if (ui->updateNewPrice->text().length() == 0 && ui->updateNewQty->text().length() == 0) {
+    if (ui->updateDD->currentIndex() == -1) {
+        QMessageBox::critical(this, "Error", "Select an item");
+    } else if (ui->updateNewPrice->text().length() == 0 && ui->updateNewQty->text().length() == 0) {
         QMessageBox::critical(this, "Error", "Enter at least one value");
     } else if (ui->updateNewPrice->text().length() != 0 && ui->updateNewQty->text().length() == 0) {
         if (ui->updateNewPrice->text().toDouble() == 0.0) {
             QMessageBox::warning(this, "Warning", "Updated Price cannot be zero");
         } else {
             qDebug() << "Only price will be updated";
-            Database::updateItem(id, priceNew, QString::fromStdString("items"));
+            Database::updateItem(id, priceNew);
             ui->updateDD->setCurrentIndex(-1);
 
             QMessageBox::information(this, "Info", "Price updated successfully");
@@ -107,7 +109,7 @@ void Update::updateItemFunction()
             QMessageBox::warning(this, "Warning", "Updated Quantity cannot be zero");
         } else {
             qDebug() << "Only quantity will be updated";
-            Database::updateItem(id, qtyNew, QString::fromStdString("items"));
+            Database::updateItem(id, qtyNew);
             ui->updateDD->setCurrentIndex(-1);
 
             QMessageBox::information(this, "Info", "Quantity updated successfully");
@@ -118,7 +120,7 @@ void Update::updateItemFunction()
             QMessageBox::warning(this, "Warning", "Values cannot be zero");
         } else {
             qDebug() << "Both price and quantity will be updated";
-            Database::updateItem(id, priceNew, qtyNew, QString::fromStdString("items"));
+            Database::updateItem(id, priceNew, qtyNew);
             ui->updateDD->setCurrentIndex(-1);
 
             QMessageBox::information(this, "Info", "Price and Quantity updated successfully");
