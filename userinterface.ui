@@ -129,8 +129,8 @@
          </property>
          <property name="icon">
           <iconset resource="Resources.qrc">
-           <normaloff>:/icons/Icons/home_unchecked.ico</normaloff>
-           <normalon>:/icons/Icons/home_checked.ico</normalon>:/icons/Icons/home_unchecked.ico</iconset>
+           <normaloff>:/icons/Icons/home.png</normaloff>
+           <normalon>:/icons/Icons/home_checked.png</normalon>:/icons/Icons/home.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -511,8 +511,8 @@
          </property>
          <property name="icon">
           <iconset resource="Resources.qrc">
-           <normaloff>:/icons/Icons/home_unchecked.ico</normaloff>
-           <normalon>:/icons/Icons/home_checked.ico</normalon>:/icons/Icons/home_unchecked.ico</iconset>
+           <normaloff>:/icons/Icons/home.png</normaloff>
+           <normalon>:/icons/Icons/home_checked.png</normalon>:/icons/Icons/home.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -870,8 +870,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>631</width>
-                 <height>608</height>
+                 <width>98</width>
+                 <height>28</height>
                 </rect>
                </property>
               </widget>
@@ -2464,8 +2464,8 @@ border-radius:10px;</string>
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>66</width>
-                 <height>16</height>
+                 <width>98</width>
+                 <height>28</height>
                 </rect>
                </property>
               </widget>

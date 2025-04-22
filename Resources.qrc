@@ -3,6 +3,8 @@
     <file>license.txt</file>
   </qresource>
   <qresource prefix="/icons">
+    <file>Icons/home.png</file>
+    <file>Icons/home_checked.png</file>
     <file>Icons/license_checked.png</file>
     <file>Icons/feedback.png</file>
     <file>Icons/feedback_checked.png</file>
@@ -12,8 +14,6 @@
     <file>Icons/delete.ico</file>
     <file>Icons/exit_main.ico</file>
     <file>Icons/forward.ico</file>
-    <file>Icons/home_checked.ico</file>
-    <file>Icons/home_unchecked.ico</file>
     <file>Icons/license.png</file>
     <file>Icons/logout.ico</file>
     <file>Icons/menu.ico</file>
