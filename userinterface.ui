@@ -121,9 +121,6 @@
          <property name="focusPolicy">
           <enum>Qt::FocusPolicy::NoFocus</enum>
          </property>
-         <property name="toolTip">
-          <string>Goto Home</string>
-         </property>
          <property name="text">
           <string/>
          </property>
@@ -166,9 +163,6 @@
          <property name="focusPolicy">
           <enum>Qt::FocusPolicy::NoFocus</enum>
          </property>
-         <property name="toolTip">
-          <string>Open Library</string>
-         </property>
          <property name="text">
           <string/>
          </property>
@@ -210,9 +204,6 @@
          </property>
          <property name="focusPolicy">
           <enum>Qt::FocusPolicy::NoFocus</enum>
-         </property>
-         <property name="toolTip">
-          <string>Open Library</string>
          </property>
          <property name="text">
           <string/>
@@ -269,9 +260,6 @@
          <property name="focusPolicy">
           <enum>Qt::FocusPolicy::NoFocus</enum>
          </property>
-         <property name="toolTip">
-          <string>Open Library</string>
-         </property>
          <property name="text">
           <string/>
          </property>
@@ -313,9 +301,6 @@
          </property>
          <property name="focusPolicy">
           <enum>Qt::FocusPolicy::NoFocus</enum>
-         </property>
-         <property name="toolTip">
-          <string>Open Settings</string>
          </property>
          <property name="text">
           <string/>
@@ -359,9 +344,6 @@
          <property name="focusPolicy">
           <enum>Qt::FocusPolicy::NoFocus</enum>
          </property>
-         <property name="toolTip">
-          <string>Logout</string>
-         </property>
          <property name="text">
           <string/>
          </property>
@@ -402,9 +384,6 @@
          </property>
          <property name="focusPolicy">
           <enum>Qt::FocusPolicy::NoFocus</enum>
-         </property>
-         <property name="toolTip">
-          <string>Quit App</string>
          </property>
          <property name="text">
           <string/>
@@ -503,9 +482,6 @@
          <property name="focusPolicy">
           <enum>Qt::FocusPolicy::NoFocus</enum>
          </property>
-         <property name="toolTip">
-          <string/>
-         </property>
          <property name="text">
           <string>Home</string>
          </property>
@@ -548,9 +524,6 @@
          <property name="focusPolicy">
           <enum>Qt::FocusPolicy::NoFocus</enum>
          </property>
-         <property name="toolTip">
-          <string/>
-         </property>
          <property name="text">
           <string>Feedback</string>
          </property>
@@ -592,9 +565,6 @@
          </property>
          <property name="focusPolicy">
           <enum>Qt::FocusPolicy::NoFocus</enum>
-         </property>
-         <property name="toolTip">
-          <string/>
          </property>
          <property name="text">
           <string>Order History</string>
@@ -651,9 +621,6 @@
          <property name="focusPolicy">
           <enum>Qt::FocusPolicy::NoFocus</enum>
          </property>
-         <property name="toolTip">
-          <string/>
-         </property>
          <property name="text">
           <string>License/Credits</string>
          </property>
@@ -695,9 +662,6 @@
          </property>
          <property name="focusPolicy">
           <enum>Qt::FocusPolicy::NoFocus</enum>
-         </property>
-         <property name="toolTip">
-          <string/>
          </property>
          <property name="text">
           <string>Settings</string>
@@ -741,9 +705,6 @@
          <property name="focusPolicy">
           <enum>Qt::FocusPolicy::NoFocus</enum>
          </property>
-         <property name="toolTip">
-          <string/>
-         </property>
          <property name="text">
           <string>Logout</string>
          </property>
@@ -784,9 +745,6 @@
          </property>
          <property name="focusPolicy">
           <enum>Qt::FocusPolicy::NoFocus</enum>
-         </property>
-         <property name="toolTip">
-          <string/>
          </property>
          <property name="text">
           <string>Exit</string>
@@ -848,7 +806,7 @@
          <string notr="true"/>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="home_page">
          <property name="styleSheet">
@@ -870,8 +828,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>98</width>
-                 <height>28</height>
+                 <width>631</width>
+                 <height>608</height>
                 </rect>
                </property>
               </widget>
@@ -1074,7 +1032,8 @@
                   <widget class="QLabel" name="dotdPrice">
                    <property name="font">
                     <font>
-                     <pointsize>16</pointsize>
+                     <pointsize>18</pointsize>
+                     <bold>true</bold>
                     </font>
                    </property>
                    <property name="text">
@@ -2168,7 +2127,7 @@ border-radius:10px;</string>
               <item>
                <widget class="QLabel" name="label_7">
                 <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/Ridhi-Kapoor&quot;&gt;&lt;span style=&quot; font-size:14pt; text-decoration: underline; color:#05b8cc;&quot;&gt;Siddharth Singh&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/Siddharth131105&quot;&gt;&lt;span style=&quot; font-size:14pt; text-decoration: underline; color:#05b8cc;&quot;&gt;Siddharth Singh&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                 <property name="textFormat">
                  <enum>Qt::TextFormat::MarkdownText</enum>
