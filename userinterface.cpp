@@ -361,6 +361,15 @@ void UserInterface::checkoutFunction()
             QMessageBox::warning(this, "Error", "No items in the cart");
             return;
         } else {
+            // Clearing orderDetails map with values 0
+            QMutableMapIterator<int, int> it(orderDetails);
+            while (it.hasNext()) {
+                it.next();
+                if (it.value() == 0) {
+                    it.remove();
+                }
+            }
+
             qDebug() << "Option:" << ui->optionDD->currentText()
                      << "Price:" << price;
             qDebug() << "Order Details:";
