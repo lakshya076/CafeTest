@@ -46,20 +46,6 @@ bool Database::setupDatabase(QString dbPath)
         return false;
     }
 
-    if (!query.exec("CREATE TABLE IF NOT EXISTS dotd ("
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    "name TEXT NOT NULL, "
-                    "is_vegetarian BOOLEAN, "
-                    "indicator1 TEXT, "
-                    "indicator2 TEXT, "
-                    "indicator3 TEXT, "
-                    "price REAL NOT NULL, "
-                    "available_qty INTEGER NOT NULL)")) {
-        qDebug() << "Error creating dotd table:" << query.lastError().text();
-        return false;
-    }
-    query.exec("DROP TABLE dotd");
-
     if (!query.exec("CREATE TABLE IF NOT EXISTS order_history ("
                     "order_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                     "uid TEXT NOT NULL, "

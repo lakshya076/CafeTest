@@ -398,7 +398,6 @@ void UserInterface::checkoutFunction()
                 if (isDotd) {
                     out << dotd["name"].toString() << " : Quantity 1" << "\n";
                     orderDetails[dotd["id"].toInt()] += 1;
-                    qDebug() << dotd["id"].toInt() << "jnhgvyctrd567r87tigubjk";
                 }
 
                 file.close();
