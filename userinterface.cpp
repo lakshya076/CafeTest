@@ -711,16 +711,12 @@ void UserInterface::submitFeedbackFunction()
         opt1 = true;
     } else if (ui->feedbackRadioNo1->isChecked()) {
         opt1 = false;
-    } else {
-        QMessageBox::critical(this, "Error", "Please select all the options");
     }
 
     if (ui->feedbackRadioYes2->isChecked()) {
         opt2 = true;
     } else if (ui->feedbackRadioNo2->isChecked()) {
         opt2 = false;
-    } else {
-        QMessageBox::critical(this, "Error", "Please select all the options");
     }
 
     qDebug() << "Feedback is:" << feed1 << opt1 << text1 << feed2 << opt2 << text2 << text3;
@@ -746,6 +742,13 @@ void UserInterface::submitFeedbackFunction()
         qDebug() << "Feedback written to file successfully.";
 
         QMessageBox::information(this, "Info", "Feedback has been submitted successfully");
+
+        ui->feedbackDD1->clear();
+        ui->feedbackDD2->clear();
+        ui->feedbackLE1->clear();
+        ui->feedbackLE2->clear();
+        ui->feedbackLE3->clear();
+
     } else {
         qDebug() << "Error opening feedback.txt for writing!";
     }
