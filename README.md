@@ -60,4 +60,6 @@ A Cafe Management System built using C++, SQL and the Qt Framework.
 - [Pull Requests](https://github.com/lakshya076/CafeTest/pulls) are welcome but for major changes or improvements, please open an [issue](https://github.com/lakshya076/CafeTest/issues) first to discuss the changes.
 
 ## Preview
-Coming Soon
+![image](https://github.com/user-attachments/assets/7f7e67da-3b41-4a10-b933-8beb83a58e6a)
+![image](https://github.com/user-attachments/assets/c126f130-0bf8-4c42-810f-57d7266b583b)
+![image](https://github.com/user-attachments/assets/54819e48-a3a2-4b6b-8e6f-34fd861a64c4)
